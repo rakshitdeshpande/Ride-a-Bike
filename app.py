@@ -6,6 +6,8 @@ import os
 
 app = Flask(__name__)
 
+app.secret_key = 'Ride-a-Bike'
+
 file = open("db_name","r")
 username = file.read()
 file = open("db_pass","r")
@@ -29,6 +31,7 @@ def signup():
         pass_encrypt = pass_256.hexdigest()
         cred = {"name":request.form['name'],"email":request.form['email'],"phone_number":request.form['phone_number'],"gender":request.form['gender'],"blood_group":request.form['blood_group'],"dob":request.form['dob'],"dl_number":request.form['dl_number'],"dl_valid_till":request.form['dl_valid_till'],"password":pass_encrypt}
         db.details.insert(cred) 
+        session['username'] = request.form['name']
         return "welcome"
 
 @app.route('/login', methods=['POST','GET'])
@@ -38,8 +41,10 @@ def login():
     else:
         try:
             if request.form['name'] == "admin" and request.form['password'] == "admin":
+                session['username'] = request.form['name']
                 return "admin"
             elif request.form['name'] == "manager" and request.form['password'] == "maanger":
+                session['username'] = request.form['name']
                 return "manager"
             else:
                 password = request.form['password']
@@ -47,11 +52,25 @@ def login():
                 pass_encrypt = pass_256.hexdigest()
                 x = db.details.find({"name":request.form['name']})
                 if x[0]["password"] == pass_encrypt :
-                    return "welcome"
+                    session['username'] = request.form['name']
+                    return redirect('/view')
                 else:
                     return redirect('/login')
         except:
             return redirect('/login')
+
+@app.route('/view')
+def view():
+    if 'username' in session:
+        return render_template("view.html")
+    else:
+        return "You are not logged in <br><a href = '/login'></b>" + "click here to log in</b></a>"
+
+@app.route('/logout')
+def logout():
+    session.pop('username',None)
+    return redirect('/')
+
 
 @app.errorhandler(404)
 def notFound(e):
