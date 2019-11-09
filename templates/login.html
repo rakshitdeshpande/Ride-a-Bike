@@ -1,0 +1,68 @@
+{% extends 'base.html' %}
+{% block title %}Login{% endblock %}
+
+{% block body_content %}
+<div class="view view-main ">
+        <div class="page-content">
+                <div class="navbar">
+                    <div class="navbar-bg"></div>
+                        <div class="navbar-inner">
+                            <div class="left">
+                                <a href="/" class = "external"><i class="icons f7-icons">arrow_left</i></a>
+                            </div>
+                            <div class="title">Login</div>
+                        </div>
+                    </div>
+                    <div class="block text-align-center">
+                      <p align="center">
+                        <img src="static/images/logo.png" >
+                      </p>
+                    </div>
+                    <div class="login-screen-content">
+                        <!-- <div class="login-screen-title">My App</div> -->
+                            <form action = "" method = 'POST' id = "form">
+                                <div class="list">
+                                  <ul>
+                                    <li class="item-content item-input">
+                                      <div class="item-inner">
+                                        <div class="item-title item-label"><span style="font-size: 20px">Username</span></div>
+                                        <div class="item-input">
+                                          <input type="text" name="username" placeholder="Your username">
+                                        </div>
+                                      </div>
+                                    </li>
+                                    <li class="item-content item-input">
+                                      <div class="item-inner">
+                                        <div class="item-title item-label"><span style="font-size: 20px">Password</span></div>
+                                        <div class="item-input">
+                                          <input type="password" name="password" placeholder="Your password">
+                                        </div>
+                                      </div>
+                                    </li>
+                                  </ul>
+                                </div>
+                                <div class="list">
+                                  <ul>
+                                    <li><button class="button col button-round" ><span style="font-size: 15px">Login</span></button></li>
+                                  </ul>
+                                </div>
+                              </form>
+                            </div>
+                          </div>
+
+
+{% endblock %}
+
+{% block scripts %}
+<script type="text/javascript">
+
+
+var $$ = Dom7;
+
+// Alert
+$$('.open-alert').on('click', function () {
+  app.dialog.alert('Hello');
+});
+
+</script>
+{% endblock %}

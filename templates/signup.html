@@ -1,0 +1,208 @@
+{% extends 'base.html' %}
+{% block title %}Sign Up{% endblock %}
+
+{% block body_content %}
+<div class="view view-main">
+        <div class="page-content">
+                <div class="navbar">
+                        <div class="navbar-bg"></div>
+                        <div class="navbar-inner">
+                            <div class="left">
+                                <a href="/" class="external"><i class="icons f7-icons">arrow_left</i></a>
+                            </div>
+                            <div class="title">Sign Up</div>
+                        </div>
+                    </div>
+                    <div class="block text-align-center">
+                      <p align="center">
+                        <img src="static/images/logo.png" >
+                      </p>
+                    </div>
+                <form action="" method = 'POST' >
+                    
+                    <div class="list no-hairlines-md">
+                    <ul>
+                        <li class="item-content item-input item-input-outline">
+                        <div class="item-media">
+                            <i class="icons f7-icons">person_crop_circle</i>
+                        </div>
+                        <div class="item-inner">
+                        <div class="item-title item-floating-label">Name</div>
+                         <div class="item-input-wrap">
+                        <input type="text" placeholder="Your name">
+                                 <span class="input-clear-button"></span>
+                        </div>
+                      </div>
+                    </li>
+                    
+                  <li class="item-content item-input item-input-outline">
+                  <div class="item-media">
+                      <i class="icons f7-icons">envelope_fill</i>
+                  </div>
+                  <div class="item-inner">
+                        <div class="item-title item-floating-label">E-mail</div>
+                        <div class="item-input-wrap">
+                        <input type="email" placeholder="Your e-mail">
+                        <span class="input-clear-button"></span>
+                  </div>
+                  </div>
+                </li>
+                <li class="item-content item-input item-input-outline">
+                    <div class="item-media">
+                        <i class="icons f7-icons">phone_fill</i>
+                    </div>
+                    <div class="item-inner">
+                      <div class="item-title item-floating-label">Phone</div>
+                        <div class="item-input-wrap">
+                        <input type="tel" placeholder="Your phone number">
+                        <span class="input-clear-button"></span>
+                      </div>
+                    </div>
+                  </li>
+                  <li class="item-content item-input item-input-outline">
+                      <div class="item-media">
+                          <i class="icons f7-icons">person_alt</i>
+                      </div>
+                      <div class="item-inner">
+                        <div class="item-title item-floating-label">Gender</div>
+                          <div class="item-input-wrap">
+                              <select name="gender">
+                                  <option value="male" selected>Male</option>
+                                  <option value="female">Female</option>
+                                </select>
+                          <span class="input-clear-button"></span>
+                        </div>
+                      </div>
+                    </li>
+                    <li class="item-content item-input item-input-outline">
+                        <div class="item-media">
+                            <i class="icons f7-icons">drop_fill</i>
+                        </div>
+                        <div class="item-inner">
+                          <div class="item-title item-floating-label">Blood Group</div>
+                            <div class="item-input-wrap">
+                                <select name="Blood Group">
+                                    <option value="A+">A+</option>
+                                    <option value="A-">A-</option>
+                                    <option value="B+">B+</option>
+                                    <option value="B-">B-</option>
+                                    <option value="O+">O+</option>
+                                    <option value="O-">O-</option>
+                                    <option value="AB+">AB+</option>
+                                    <option value="AB-">AB-</option>
+                                  </select>
+                            <span class="input-clear-button"></span>
+                          </div>
+                        </div>
+                      </li>
+                  <li class="item-content item-input item-input-outline">
+                      <div class="item-media">
+                          <i class="icons f7-icons">lock_fill</i>
+                      </div>
+                     <div class="item-inner">
+                     <div class="item-title item-floating-label">Password</div>
+                    <div class="item-input-wrap">
+                          <input type="password" placeholder="Your password">
+                          <span class="input-clear-button"></span>
+                    </div>
+                    </div>
+                    </li>
+                  
+                  <li class="item-content item-input item-input-outline">
+                      <div class="item-media">
+                          <i class="icons f7-icons">calendar</i>
+                      </div>
+                      <div class="item-inner">
+                        <div class="item-title item-floating-label">Date of Birth</div>
+                          <div class="item-input-wrap">
+                              <input type="text" placeholder="Select date" readonly="readonly" id="date-of-birth"/>
+                          <span class="input-clear-button"></span>
+                        </div>
+                      </div>
+                    </li>
+                    <li class="item-content item-input item-input-outline">
+                        <div class="item-media">
+                            <i class="icons f7-icons">number_circle_fill</i>
+                        </div>
+                        <div class="item-inner">
+                          <div class="item-title item-floating-label">DL Number</div>
+                            <div class="item-input-wrap">
+                            <input type="tel" placeholder="Your phone number">
+                            <span class="input-clear-button"></span>
+                          </div>
+                        </div>
+                    </li>
+                    <li class="item-content item-input item-input-outline">
+                        <div class="item-media">
+                            <i class="icons f7-icons">calendar</i>
+                        </div>
+                        <div class="item-inner">
+                          <div class="item-title item-floating-label">DL Valid Till</div>
+                            <div class="item-input-wrap">
+                                <input type="text" placeholder="Select date" readonly="readonly" id="dl-valid"/>
+                            <span class="input-clear-button"></span>
+                          </div>
+                        </div>
+                    </li>
+                 </ul>
+                </div>
+                <div class = "block">
+                      <p class = "row">
+                          <input class="col button button-fill button-round " type="submit" value="Sign Up">
+                      </p>
+                </div>
+  </form>                  
+    
+{% endblock %}
+
+{% block scripts %}
+<script type="text/javascript">
+
+var $$ = Dom7;
+
+// Create bottom toast
+var toastBottom = app.toast.create({
+  text: 'Signing You Up ...',
+  closeTimeout: 3000,
+});
+
+$$('.open-toast-bottom').on('click', function () {
+  toastBottom.open();
+});
+
+var today = new Date();
+
+var calendarDisabled = app.calendar.create({
+    inputEl: '#dl-valid',
+    closeOnSelect: false,
+    openIn: 'auto',
+    header: true,
+    footer: true,
+    animate : true,
+    dateFormat: 'dd-mm-yyyy',
+    disabled: {
+      from : new Date(1,1,1970),
+      to: today,
+      
+    },
+    convertToPopover : true,
+});
+
+var calendarDisabled = app.calendar.create({
+    inputEl: '#date-of-birth',
+    closeOnSelect: false,
+    openIn: 'auto',
+    header: true,
+    footer: true,
+    animate : true,
+    dateFormat: 'dd-mm-yyyy',
+    disabled: {
+      from: today,
+      
+    },
+    convertToPopover : true,
+});
+
+
+</script>
+{% endblock %}
