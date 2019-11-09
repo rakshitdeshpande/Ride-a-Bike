@@ -22,6 +22,13 @@ def signup():
     if request.method == 'GET':
         return render_template('signup.html')
     else:
+        if request.form['name']=="" or request.form['email']=="" or request.form['phone_number']=="" or request.form['gender']=="" or request.form['blood_group']=="" or request.form['dob']=="" or request.form['dl_number']=="" or request.form['dl_valid_till']=="" or request.form['password']=="" :
+            return redirect('/signup')
+        password = request.form['password']
+        pass_256 = hashlib.sha256(password.encode())
+        pass_encrypt = pass_256.hexdigest()
+        cred = {"name":request.form['name'],"email":request.form['email'],"phone_number":request.form['phone_number'],"gender":request.form['gender'],"blood_group":request.form['blood_group'],"dob":request.form['dob'],"dl_number":request.form['dl_number'],"dl_valid_till":request.form['dl_valid_till'],"password":pass_encrypt}
+        db.details.insert(cred) 
         return "welcome"
 
 @app.route('/login', methods=['POST','GET'])
@@ -29,7 +36,22 @@ def login():
     if request.method=="GET":
         return render_template("login.html")
     else:
-        return "welcome"
+        try:
+            if request.form['name'] == "admin" and request.form['password'] == "admin":
+                return "admin"
+            elif request.form['name'] == "manager" and request.form['password'] == "maanger":
+                return "manager"
+            else:
+                password = request.form['password']
+                pass_256 = hashlib.sha256(password.encode())
+                pass_encrypt = pass_256.hexdigest()
+                x = db.details.find({"name":request.form['name']})
+                if x[0]["password"] == pass_encrypt :
+                    return "welcome"
+                else:
+                    return redirect('/login')
+        except:
+            return redirect('/login')
 
 @app.errorhandler(404)
 def notFound(e):
