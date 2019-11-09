@@ -1,6 +1,17 @@
+import pymongo,datetime,hashlib
 from flask import Flask, render_template, url_for, redirect, request ,flash ,session
+from pymongo import MongoClient
+from flask_mail import Mail,Message
+import os
 
 app = Flask(__name__)
+
+file = open("db_name","r")
+username = file.read()
+file = open("db_pass","r")
+password = file.read()
+client = pymongo.MongoClient("mongodb+srv://"+username+":"+password+"@cluster0-2ogac.mongodb.net/test?retryWrites=true&w=majority")
+db = client["ride-a-bike"]
 
 @app.route('/')
 def index():
