@@ -1,5 +1,5 @@
 {% extends 'base.html' %}
-{% block title %}Login{% endblock %}
+{% block title %}Add Scooter{% endblock %}
 
 {% block body_content %}
 <div class="view view-main ">
@@ -8,18 +8,102 @@
                     <div class="navbar-bg"></div>
                         <div class="navbar-inner">
                             <div class="left">
+                                    <a href="/manager" class = "external"><i class="icons f7-icons">arrow_left</i></a>
                                 <div class= "block">
                                     <img src="static/images/logo.png" height="50px" width = "50px" >
                                 </div>
                             </div>
-                            <div class="title">Ride-a-Bike</div>
+                            <div class="title">Add Scooter</div>
                             
                         </div>
                 </div>
+                <form action="/add_scooter" method = 'POST'>
+                        <div class="list no-hairlines-md">
+                          <ul>
+                            <li class="item-content item-input">
+                              <div class="item-media">
+                                    <i class="icons f7-icons">doc</i>
+                              </div>
+                              <div class="item-inner">
+                                <div class="item-title item-floating-label">Registration Number</div>
+                                <div class="item-input-wrap">
+                                  <input type="text" name = "registration_number" placeholder="Registration Number" required validate pattern = "[A-Z]*[-][0-9]*[-][A-Z][-][0-9]*" data-error-message = "Enter valid Details"/>
+                                  <span class="input-clear-button"></span>
+                                </div>
+                              </div>
+                            </li>
+                            <li class="item-content item-input">
+                              <div class="item-media">
+                                    <i class="icons f7-icons">number_circle_fill</i>
+                              </div>
+                              <div class="item-inner">
+                                <div class="item-title item-floating-label">Insurance Number</div>
+                                <div class="item-input-wrap">
+                                  <input type="tel" placeholder="Insurance Number" name = "insurance_number" required validate pattern = "[0-9]*" data-error-message = "Enter valid Details"/>
+                                  <span class="input-clear-button"></span>
+                                </div>
+                              </div>
+                            </li>
+                            <li class="item-content item-input">
+                              <div class="item-media">
+                                    <i class="icons f7-icons">calendar</i>
+                              </div>
+                              <div class="item-inner">
+                                <div class="item-title item-floating-label">Insurance Valid Till </div>
+                                <div class="item-input-wrap">
+                                        <input type="text" placeholder="Select date" readonly="readonly" name="insurance_valid_till" id="insurance-valid" required validate/>
+                                  <span class="input-clear-button"></span>
+                                </div>
+                              </div>
+                            </li>
+                            <li class="item-content item-input">
+                              <div class="item-media">
+                                    <i class="icons f7-icons">map_pin_ellipse</i>
+                              </div>
+                              <div class="item-inner">
+                                <div class="item-title item-floating-label">Docking Station</div>
+                                <div class="item-input-wrap">
+                                  <select name = "docking_station">
+                                      <option value = "1">1</option>
+                                      <option value = "2">2 </option>
+                                    </select>
+                                  <span class="input-clear-button"></span>
+                                </div>
+                              </div>
+                            </li>
+                          </ul>
+                        </div>
+                        <div class="block">
+                                <p class="row">
+                                        <input type = "submit" value = "ADD SCOOTER"  class="col button button-outline button-raised"/>
+                                </p>
+                        </div>
+                </form>
+
         </div>
 </div>
 {% endblock %}
 
 {% block scripts %}
+
+<script type="text/javascript">
+var today = new Date();
+
+var calendarDisabled = app.calendar.create({
+    inputEl: '#insurance-valid',
+    closeOnSelect: false,
+    openIn: 'auto',
+    header: true,
+    footer: true,
+    animate : true,
+    dateFormat: 'dd-mm-yyyy',
+    disabled: {
+      from : new Date(1,1,1970),
+      to: today,
+      
+    },
+    convertToPopover : true,
+});
+</script>
 
 {% endblock %}

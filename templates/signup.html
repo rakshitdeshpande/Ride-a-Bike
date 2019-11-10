@@ -28,7 +28,7 @@
                           <div class="item-inner">
                             <div class="item-title item-floating-label">Name</div>
                               <div class="item-input-wrap">
-                                <input type="text" placeholder="Your name" name = "name"/>
+                                <input type="text" placeholder="Your name" name = "name" required validate/>
                                 <span class="input-clear-button"></span>
                               </div>
                             </div>
@@ -41,7 +41,7 @@
                             <div class="item-inner">
                                 <div class="item-title item-floating-label">E-mail ID</div>
                                     <div class="item-input-wrap">
-                                        <input type="email" placeholder="Your e-mail" name = "email"/>
+                                        <input type="email" placeholder="Your e-mail" name = "email" requied validate/>
                                         <span class="input-clear-button"></span>
                                     </div>
                             </div>
@@ -53,7 +53,7 @@
                             <div class="item-inner">
                                 <div class="item-title item-floating-label">Phone Number</div>
                                     <div class="item-input-wrap">
-                                        <input type="tel" placeholder="Your phone number" name = "phone_number"/>
+                                        <input type="tel" placeholder="Your phone number" name = "phone_number" required validate pattern = "[0-9]*" data-error-message = "Only numbers please!"/>
                                         <span class="input-clear-button"></span>
                                     </div>
                             </div>
@@ -65,7 +65,7 @@
                             <div class="item-inner">
                                 <div class="item-title item-floating-label">Gender</div>
                                     <div class="item-input-wrap">
-                                        <select name="gender">
+                                        <select name="gender" required validate>
                                             <option value="male" selected>Male</option>
                                             <option value="female">Female</option>
                                         </select>
@@ -80,7 +80,7 @@
                             <div class="item-inner">
                                 <div class="item-title item-floating-label">Blood Group</div>
                                     <div class="item-input-wrap">
-                                        <select name="blood_group">
+                                        <select name="blood_group" required validate>
                                             <option value="A+">A+</option>
                                             <option value="A-">A-</option>
                                             <option value="B+">B+</option>
@@ -101,7 +101,7 @@
                             <div class="item-inner">
                                 <div class="item-title item-floating-label">Date of Birth</div>
                                     <div class="item-input-wrap">
-                                        <input type="text" placeholder="Select date" readonly="readonly" name = "dob" id="date-of-birth"/>
+                                        <input type="text" placeholder="Select date" readonly="readonly" name = "dob" id="date-of-birth" required validate/>
                                         <span class="input-clear-button"></span>
                                     </div>
                             </div>
@@ -113,7 +113,7 @@
                             <div class="item-inner">
                               <div class="item-title item-floating-label">DL Number</div>
                                 <div class="item-input-wrap">
-                                    <input type="tel" placeholder="Your dl number" name="dl_number">
+                                    <input type="tel" placeholder="Your dl number" name="dl_number" required validate pattern = "[0-9]*" data-error-message = "Only numbers please!"/>
                                     <span class="input-clear-button"></span>
                                 </div>
                             </div>
@@ -125,7 +125,7 @@
                             <div class="item-inner">
                                 <div class="item-title item-floating-label">DL Valid Till</div>
                                     <div class="item-input-wrap">
-                                        <input type="text" placeholder="Select date" readonly="readonly" name="dl_valid_till" id="dl-valid"/>
+                                        <input type="text" placeholder="Select date" readonly="readonly" name="dl_valid_till" id="dl-valid" required validate/>
                                         <span class="input-clear-button"></span>
                                     </div>
                             </div>
@@ -137,7 +137,7 @@
                             <div class="item-inner">
                                 <div class="item-title item-floating-label">Password</div>
                                     <div class="item-input-wrap">
-                                        <input type="password" placeholder="Your password" name="password"/>
+                                        <input type="password" placeholder="Your password" name="password" required validate/>
                                             <span class="input-clear-button"></span>
                                     </div>
                             </div>

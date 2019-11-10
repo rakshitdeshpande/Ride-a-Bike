@@ -32,7 +32,7 @@ def signup():
         cred = {"name":request.form['name'],"email":request.form['email'],"phone_number":request.form['phone_number'],"gender":request.form['gender'],"blood_group":request.form['blood_group'],"dob":request.form['dob'],"dl_number":request.form['dl_number'],"dl_valid_till":request.form['dl_valid_till'],"password":pass_encrypt}
         db.details.insert(cred) 
         session['username'] = request.form['name']
-        return "welcome"
+        return redirect('/view')
 
 @app.route('/login', methods=['POST','GET'])
 def login():
@@ -70,19 +70,20 @@ def view():
 def manager():
     try:
         if 'username' in session and session['username'] == "manager":
-            print("inside manager")
             return render_template("manager.html")
         return "You are not logged in <br><a href = '/login'></b>" + "click here to log in</b></a>"
     except:
         return redirect('/manager')
 
-@app.route('/add_scooter')
+@app.route('/add_scooter', methods = ['POST','GET'])
 def add_scooter():
     try:
         if 'username' in session and session['username'] == "manager":
             if request.method == 'GET' :
                 return render_template("add_scooter.html")
             else:
+                data = {"registration_number":request.form['registration_number'],"insurance_number":request.form['insurance_number'],"insurance_valid_till":request.form['insurance_valid_till'],"docking_station":request.form['docking_station'],"ignition_status":"off","rider_name":"-"}
+                db.scooter.insert(data)
                 return redirect('/manager')
         else:
             return "You are not logged in <br><a href = '/login'></b>" + "click here to log in</b></a>"
