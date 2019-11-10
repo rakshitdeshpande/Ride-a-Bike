@@ -32,7 +32,7 @@ def signup():
         cred = {"name":request.form['name'],"email":request.form['email'],"phone_number":request.form['phone_number'],"gender":request.form['gender'],"blood_group":request.form['blood_group'],"dob":request.form['dob'],"dl_number":request.form['dl_number'],"dl_valid_till":request.form['dl_valid_till'],"password":pass_encrypt}
         db.details.insert(cred) 
         session['username'] = request.form['name']
-        return redirect('/view')
+        return redirect('/home')
 
 @app.route('/login', methods=['POST','GET'])
 def login():
@@ -90,6 +90,34 @@ def add_scooter():
             return "You are not logged in <br><a href = '/login'></b>" + "click here to log in</b></a>"
     except:
         return render_template("add_scooter.html")
+
+@app.route('/start_ride', methods = ['POST','GET'])
+def start_ride():
+    try:
+        if 'username' in session and session['username'] != "manager":
+            if request.method == 'GET':
+                username = session['username']
+                return render_template("start_ride.html",username = username)
+            else:
+                return redirect('/end_ride')
+        else:
+            return "You are not logged in <br><a href = '/login'></b>" + "click here to log in</b></a>"
+    except:
+        return render_template('/start_ride.html')
+
+@app.route('/end_ride', methods = ['POST','GET'])
+def end_ride():
+    try:
+        if 'username' in session and session['username'] != "manager":
+            if request.method == 'GET':
+                username = session['username']
+                return render_template("end_ride.html",username = username)
+            else:
+                return "ride ended!"
+        else:
+            return "You are not logged in <br><a href = '/login'></b>" + "click here to log in</b></a>"
+    except:
+        return render_template('/end_ride.html')
 
 @app.route('/logout')
 def logout():
