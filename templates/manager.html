@@ -1,0 +1,43 @@
+{% extends 'base.html' %}
+{% block title %}Login{% endblock %}
+
+{% block body_content %}
+<div class="view view-main ">
+        <div class="page-content">
+                <div class="navbar">
+                    <div class="navbar-bg"></div>
+                        <div class="navbar-inner">
+                            <div class="left">
+                                <div class= "block">
+                                    <img src="static/images/logo.png" height="50px" width = "50px" >
+                                </div>
+                            </div>
+                            <div class="title">Ride-a-Bike</div>
+                            <div class="right">
+                                <a href="/logout" class = "external"><i class="icons f7-icons">square_arrow_right</i></a>
+                            </div>
+                        </div>
+                </div>
+                        <div class="block color-theme-blue">
+                            <p class="row">
+                              <button class="col button button-outline"><a href="/add_scooter" class = "external">Add Scooter</a></button>
+                            </p>
+                            <p class="row">
+                                <button class="col button button-outline"><a href="#" class = "external">Remove Scooter</a></button>
+                            </p>
+                            <p class="row">
+                                <button class="col button button-outline"><a href="#" class = "external">Add Docking Station</a></button>
+                            </p>
+                            <p class="row">
+                                <button class="col button button-outline"><a href="#" class = "external">Remove Docking Station</a></button>
+                            </p>
+                        </div>
+
+                </div>
+        </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+
+{% endblock %}

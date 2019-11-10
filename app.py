@@ -43,9 +43,9 @@ def login():
             if request.form['name'] == "admin" and request.form['password'] == "admin":
                 session['username'] = request.form['name']
                 return "admin"
-            elif request.form['name'] == "manager" and request.form['password'] == "maanger":
+            elif request.form['name'] == "manager" and request.form['password'] == "manager":
                 session['username'] = request.form['name']
-                return "manager"
+                return redirect('/manager')
             else:
                 password = request.form['password']
                 pass_256 = hashlib.sha256(password.encode())
@@ -65,6 +65,29 @@ def view():
         return render_template("view.html")
     else:
         return "You are not logged in <br><a href = '/login'></b>" + "click here to log in</b></a>"
+
+@app.route('/manager')
+def manager():
+    try:
+        if 'username' in session and session['username'] == "manager":
+            print("inside manager")
+            return render_template("manager.html")
+        return "You are not logged in <br><a href = '/login'></b>" + "click here to log in</b></a>"
+    except:
+        return redirect('/manager')
+
+@app.route('/add_scooter')
+def add_scooter():
+    try:
+        if 'username' in session and session['username'] == "manager":
+            if request.method == 'GET' :
+                return render_template("add_scooter.html")
+            else:
+                return redirect('/manager')
+        else:
+            return "You are not logged in <br><a href = '/login'></b>" + "click here to log in</b></a>"
+    except:
+        return render_template("add_scooter.html")
 
 @app.route('/logout')
 def logout():
