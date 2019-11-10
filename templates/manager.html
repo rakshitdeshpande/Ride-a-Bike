@@ -23,13 +23,13 @@
                               <button class="col button button-outline"><a href="/add_scooter" class = "external"> Add Scooter</a></button>
                             </p>
                             <p class="row">
-                                <button class="col button button-outline"><a href="#" class = "external">Remove Scooter</a></button>
+                                <button class="col button button-outline open-prompt1"><a href="#" class = "external">Remove Scooter</a></button>
                             </p>
                             <p class="row">
-                                <button class="col button button-outline"><a href="#" class = "external">Add Docking Station</a></button>
+                                <button class="col button button-outline open-prompt2">Add Docking Station</button>
                             </p>
                             <p class="row">
-                                <button class="col button button-outline"><a href="#" class = "external">Remove Docking Station</a></button>
+                                <button class="col button button-outline open-prompt3"><a href="#" class = "external">Remove Docking Station</a></button>
                             </p>
                         </div>
 
@@ -40,4 +40,34 @@
 
 {% block scripts %}
 
+<script type = "text/javascript">
+
+var $$ = Dom7;
+
+$$('.open-prompt1').on('click', function () {
+    app.dialog.prompt('Vehicle Number', function (num) {
+      app.dialog.confirm('Are you sure that Vehicle Number is ' + num + '?', function () {
+        //app.dialog.alert('Ok, your name is ' + name);
+      });
+    });
+  });
+
+$$('.open-prompt2').on('click', function () {
+    app.dialog.prompt('Docking Station Name', function (name) {
+      app.dialog.confirm('Are you sure that your Docking Station Name is ' + name + '?', function () {
+        //app.dialog.alert('Ok, your name is ' + name);
+      });
+    });
+  });
+
+$$('.open-prompt3').on('click', function () {
+    app.dialog.prompt('Docking Station Name', function (name) {
+      app.dialog.confirm('Are you sure that your Docking Station Name is ' + name + '?', function () {
+        //app.dialog.alert('Ok, your name is ' + name);
+      });
+    });
+  });
+  
+
+</script>
 {% endblock %}

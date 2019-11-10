@@ -53,16 +53,17 @@ def login():
                 x = db.details.find({"name":request.form['name']})
                 if x[0]["password"] == pass_encrypt :
                     session['username'] = request.form['name']
-                    return redirect('/view')
+                    return redirect('/home')
                 else:
                     return redirect('/login')
         except:
             return redirect('/login')
 
-@app.route('/view')
-def view():
-    if 'username' in session:
-        return render_template("view.html")
+@app.route('/home')
+def home():
+    if 'username' in session and session['username'] != "manager":
+        username = session['username']
+        return render_template("home.html",username = username)
     else:
         return "You are not logged in <br><a href = '/login'></b>" + "click here to log in</b></a>"
 
