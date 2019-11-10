@@ -113,11 +113,23 @@ def end_ride():
                 username = session['username']
                 return render_template("end_ride.html",username = username)
             else:
-                return "ride ended!"
+                return redirect('/bill')
         else:
             return "You are not logged in <br><a href = '/login'></b>" + "click here to log in</b></a>"
     except:
         return render_template('/end_ride.html')
+
+@app.route('/bill')
+def bill():
+    try:
+        if 'username' in session and session['username'] != "manager":
+            a = datetime.datetime.now()
+            time = a.strftime("%c")
+            return render_template("bill.html",time = time)
+        else:
+            return "You are not logged in <br><a href = '/login'></b>" + "click here to log in</b></a>"
+    except:
+        return render_template("bill.html")
 
 @app.route('/logout')
 def logout():
