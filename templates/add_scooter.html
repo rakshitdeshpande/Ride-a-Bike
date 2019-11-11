@@ -64,8 +64,9 @@
                                 <div class="item-title item-floating-label">Docking Station</div>
                                 <div class="item-input-wrap">
                                   <select name = "docking_station">
-                                      <option value = "1">1</option>
-                                      <option value = "2">2 </option>
+                                    {% for i in docking_station_details %}
+                                      <option value = {{ i["station_name"] }}>{{ i["station_name"] }}</option>
+                                    {% endfor %}
                                     </select>
                                   <span class="input-clear-button"></span>
                                 </div>

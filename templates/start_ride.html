@@ -1,5 +1,5 @@
 {% extends 'base.html' %}
-{% block title %}Ride{% endblock %}
+{% block title %}Start-Ride{% endblock %}
 
 {% block body_content %}
         <div class="panel panel-left panel-right-2 panel-cover panel-init theme-dark">
@@ -23,6 +23,7 @@
               <div class="navbar-bg"></div>
               <div class="navbar-inner">
                     <div class="left">
+                            <!-- <a href="/" class = "external"><i class="icons f7-icons">arrow_left</i></a> -->
                             <p><a class="button panel-open" href="#" data-panel=".panel-right-2"><i class="icons f7-icons">menu</i></a></p>
                             <!-- <div class= "block">
                                 <img src="static/images/logo.png" height="50px" width = "50px" >
@@ -47,8 +48,12 @@
                                     <li class="item-content item-input">
                                       <div class="item-inner">
                                         <div class="item-title item-label"><span style="font-size: 20px">Choose your vehicle</span></div>
-                                        <div class="item-input">
-                                          <input type="text" name="registration_number" placeholder="Select Vehicle" requied validate/>
+                                        <div class="item-input-wrap">
+                                          <select name = "registration_number">
+                                            {% for i in scooter_data %}
+                                                  <option value = {{ i["registration_number"] }}> {{  i["registration_number"] }}</option>
+                                            {% endfor %}
+                                          </select>
                                         </div>
                                       </div>
                                     </li>

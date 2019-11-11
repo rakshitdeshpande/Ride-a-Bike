@@ -83,7 +83,8 @@ def add_scooter():
     # try:
         if 'username' in session and session['username'] == "manager":
             if request.method == 'GET' :
-                return render_template("add_scooter.html")
+                docking_station_details = db.docking_station.find({})
+                return render_template("add_scooter.html",docking_station_details = docking_station_details)
             else:
                 data = {"registration_number":request.form['registration_number'],"insurance_number":request.form['insurance_number'],"insurance_valid_till":request.form['insurance_valid_till'],"docking_station":request.form['docking_station'],"ignition_status":"off","rider_name":"-"}
                 db.scooter.insert(data)
@@ -104,7 +105,8 @@ def start_ride():
         if 'username' in session and session['username'] != "manager":
             if request.method == 'GET':
                 username = session['username']
-                return render_template("start_ride.html",username = username)
+                scooter_data = db.scooter.find({})
+                return render_template("start_ride.html",username = username,scooter_data = scooter_data)
             else:
                 return redirect('/end_ride')
         else:
@@ -118,7 +120,8 @@ def end_ride():
         if 'username' in session and session['username'] != "manager":
             if request.method == 'GET':
                 username = session['username']
-                return render_template("end_ride.html",username = username)
+                docking_station_data = db.docking_station.find({})
+                return render_template("end_ride.html",username = username,docking_station_data = docking_station_data)
             else:
                 return redirect('/bill')
         else:

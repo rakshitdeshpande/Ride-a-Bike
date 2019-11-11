@@ -41,14 +41,14 @@
                       <img src="static/images/logo.png" >
                     </p> -->
                 </div>
-                <div class="block block-strong">
+                <div class="block block-strong color-theme-green">
                   {% for i in docking_station_details %}
                   <div class = "block">
                     <div class="card">
                       <div class="card-header">
                         <h4>Docking Station : {{ i["station_name"] }}</h4>
                         <div class = "right">
-                            <button class="col button button-outline button-raised">Select</button>
+                            <button class="col button button-outline button-raised"><a href="/start_ride" class = "external">Select</a></button>
                         </div>
                       </div>
                       <div class="card-content card-content-padding">

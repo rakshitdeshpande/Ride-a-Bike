@@ -1,5 +1,5 @@
 {% extends 'base.html' %}
-{% block title %}Ride{% endblock %}
+{% block title %}End-Ride{% endblock %}
 
 {% block body_content %}
         <div class="panel panel-left panel-right-2 panel-cover panel-init theme-dark">
@@ -23,7 +23,7 @@
               <div class="navbar-bg"></div>
               <div class="navbar-inner">
                     <div class="left">
-                            <p><a class="button panel-open" href="#" data-panel=".panel-right-2"><i class="icons f7-icons">menu</i></a></p>
+                            <!-- <p><a class="button panel-open" href="#" data-panel=".panel-right-2"><i class="icons f7-icons">menu</i></a></p> -->
                             <!-- <div class= "block">
                                 <img src="static/images/logo.png" height="50px" width = "50px" >
                             </div> -->
@@ -47,8 +47,12 @@
                                     <li class="item-content item-input">
                                       <div class="item-inner">
                                         <div class="item-title item-label"><span style="font-size: 20px">Destination Station</span></div>
-                                        <div class="item-input">
-                                          <input type="text" name="Destination" placeholder="Select Destination" requied validate/>
+                                        <div class="item-input-wrap">
+                                            <select name = "destination">
+                                                {% for i in docking_station_data %}
+                                                      <option value = {{ i["station_name"] }}> {{  i["station_name"] }}</option>
+                                                {% endfor %}
+                                              </select>
                                         </div>
                                       </div>
                                     </li>
