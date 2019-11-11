@@ -57,7 +57,7 @@ def login():
                 else:
                     return redirect('/login')
         except:
-            return redirect('/login')
+            return redirect('/login') 
 
 @app.route('/home')
 def home():
@@ -130,6 +130,38 @@ def bill():
             return "You are not logged in <br><a href = '/login'></b>" + "click here to log in</b></a>"
     except:
         return render_template("bill.html")
+
+@app.route('/add_station',methods = ['POST','GET'])
+def add_station():
+    try :
+        if request.method == 'POST':
+            data = {"station_name":request.form["station_name"],"no_of_scooters":0}
+            db.docking_station.insert(data)
+            return "true"
+        else:
+            return render_template("manager.html")
+    except:
+        return render_template("manager.html")
+
+@app.route('/remove_scooter',methods = ['POST','GET'])
+def remove_scooter():
+    try :
+        if request.method == 'POST':
+            return "request accepted!"
+        else:
+            return render_template("manager.html")
+    except:
+        return render_template("manager.html")
+    
+@app.route('/remove_station',methods = ['POST','GET'])
+def remove_station():
+    try :
+        if request.method == 'POST':
+            return "request accepted!"
+        else:
+            return render_template("manager.html")
+    except:
+        return render_template("manager.html")
 
 @app.route('/logout')
 def logout():

@@ -31,6 +31,7 @@
                         <div class="title">Ride-a-Bike</div>
                         <div class="right">
                                 <!-- <p><a class="button panel-open" href="#" data-panel=".panel-right-2"><i class="icons f7-icons">menu</i></a></p> -->
+                                <button class="col button open-alert"><i class="icons f7-icons">info </i> </button>
                         </div>
               </div>
             </div>
@@ -62,6 +63,11 @@
 
 
 var $$ = Dom7;
+
+// Alert
+$$('.open-alert').on('click', function () {
+  app.dialog.alert('Ride Fare:<br>Half hour : 50<br>One hour : 100<br>One and Half Hour : 200<br>Two Hours : 300');
+});
 
 // Dom Events
 $$('.panel-left').on('panel:open', function () {
