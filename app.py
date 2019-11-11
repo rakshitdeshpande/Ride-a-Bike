@@ -63,7 +63,9 @@ def login():
 def home():
     if 'username' in session and session['username'] != "manager":
         username = session['username']
-        return render_template("home.html",username = username)
+        scooter_details = db.scooter.find({})
+        docking_station_details = db.docking_station.find({})
+        return render_template("home.html",username = username,docking_station_details=docking_station_details)
     else:
         return "You are not logged in <br><a href = '/login'></b>" + "click here to log in</b></a>"
 
@@ -78,18 +80,23 @@ def manager():
 
 @app.route('/add_scooter', methods = ['POST','GET'])
 def add_scooter():
-    try:
+    # try:
         if 'username' in session and session['username'] == "manager":
             if request.method == 'GET' :
                 return render_template("add_scooter.html")
             else:
                 data = {"registration_number":request.form['registration_number'],"insurance_number":request.form['insurance_number'],"insurance_valid_till":request.form['insurance_valid_till'],"docking_station":request.form['docking_station'],"ignition_status":"off","rider_name":"-"}
                 db.scooter.insert(data)
+                x = db.docking_station.find({"station_name":request.form['docking_station']})
+                num = x[0]["no_of_scooters"]
+                num = num + 1
+                print(num)
+                db.docking_station.update({"station_name":request.form['docking_station']},{"$set":{"no_of_scooters":num}})
                 return redirect('/manager')
         else:
             return "You are not logged in <br><a href = '/login'></b>" + "click here to log in</b></a>"
-    except:
-        return render_template("add_scooter.html")
+    # except:
+    #     return render_template("add_scooter.html")
 
 @app.route('/start_ride', methods = ['POST','GET'])
 def start_ride():
@@ -172,6 +179,22 @@ def logout():
 @app.errorhandler(404)
 def notFound(e):
     return render_template("404.html"), 404
+
+@app.route('/delete_scooter')
+def delete_scooter():
+    db.scooter.delete_many({})
+    return render_template("index.html")
+
+@app.route('/delete_station')
+def delete_station():
+    db.docking_station.delete_many({})
+    return render_template("index.html")
+
+@app.route('/delete_details')
+def delete_details():
+    db.docking_station.delete_many({})
+    return render_template("index.html")
+
 
 if __name__ == '__main__':
     app.run(host="0.0.0.0",port=5000, threaded = True, debug = True)

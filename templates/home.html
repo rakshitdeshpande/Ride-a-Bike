@@ -37,20 +37,27 @@
             </div>
             <div class="page-content">
                 <div class="block text-align-center">
-                    <p align="center">
+                    <!-- <p align="center">
                       <img src="static/images/logo.png" >
-                    </p>
-                  </div>
-              <div class="block block-strong">
-                <div class = "block">
-                <div class="card">
-                  <div class="card-header">Docking Station : -</div>
-                  <div class="card-content card-content-padding">
-                    Number of scooters : 0
-                  </div>
+                    </p> -->
                 </div>
+                <div class="block block-strong">
+                  {% for i in docking_station_details %}
+                  <div class = "block">
+                    <div class="card">
+                      <div class="card-header">
+                        <h4>Docking Station : {{ i["station_name"] }}</h4>
+                        <div class = "right">
+                            <button class="col button button-outline button-raised">Select</button>
+                        </div>
+                      </div>
+                      <div class="card-content card-content-padding">
+                          <h4>Number of scooters : {{ i["no_of_scooters"] }}</h4>
+                      </div>
+                    </div>
+                  </div>
+                  {% endfor %}
                 </div>
-              </div>
             </div>
           </div>
         </div>
