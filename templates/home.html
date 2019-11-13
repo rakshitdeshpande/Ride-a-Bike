@@ -48,7 +48,10 @@
                       <div class="card-header">
                         <h4>Docking Station : {{ i["station_name"] }}</h4>
                         <div class = "right">
-                            <button class="col button button-outline button-raised"><a href="/start_ride" class = "external">Select</a></button>
+                            <form action="/start_ride" method = 'POST'>
+                              <input type = "hidden" name = "station_name" value = "{{ i["station_name"] }}" />
+                              <button class="col button button-outline button-raised">Select</button>
+                            </form>
                         </div>
                       </div>
                       <div class="card-content card-content-padding">

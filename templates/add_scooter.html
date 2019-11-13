@@ -65,7 +65,7 @@
                                 <div class="item-input-wrap">
                                   <select name = "docking_station">
                                     {% for i in docking_station_details %}
-                                      <option value = {{ i["station_name"] }}>{{ i["station_name"] }}</option>
+                                      <option value = "{{ i["station_name"] }}  " > {{ i["station_name"] }} </option>
                                     {% endfor %}
                                     </select>
                                   <span class="input-clear-button"></span>

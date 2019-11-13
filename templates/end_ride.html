@@ -41,7 +41,7 @@
                 </div>
                 <div class="login-screen-content">
                         <!-- <div class="login-screen-title">My App</div> -->
-                            <form action = "" method = 'POST' id = "form">
+                            <form action = "/bill" method = 'POST' id = "form">
                                 <div class="list color-theme-yellow">
                                   <ul>
                                     <li class="item-content item-input">
@@ -50,7 +50,7 @@
                                         <div class="item-input-wrap">
                                             <select name = "destination">
                                                 {% for i in docking_station_data %}
-                                                      <option value = {{ i["station_name"] }}> {{  i["station_name"] }}</option>
+                                                      <option value = "{{ i["station_name"] }}"> {{  i["station_name"] }}</option>
                                                 {% endfor %}
                                               </select>
                                         </div>

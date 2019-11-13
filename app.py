@@ -1,4 +1,4 @@
-import pymongo,datetime,hashlib
+import pymongo,datetime,hashlib,math
 from flask import Flask, render_template, url_for, redirect, request ,flash ,session
 from pymongo import MongoClient
 from flask_mail import Mail,Message
@@ -59,13 +59,17 @@ def login():
         except:
             return redirect('/login') 
 
-@app.route('/home')
+@app.route('/home',methods = ['POST','GET'])
 def home():
     if 'username' in session and session['username'] != "manager":
+      if request.method == 'GET':
         username = session['username']
         scooter_details = db.scooter.find({})
         docking_station_details = db.docking_station.find({})
         return render_template("home.html",username = username,docking_station_details=docking_station_details)
+      else:
+          
+          return redirect('/start_ride')
     else:
         return "You are not logged in <br><a href = '/login'></b>" + "click here to log in</b></a>"
 
@@ -80,13 +84,14 @@ def manager():
 
 @app.route('/add_scooter', methods = ['POST','GET'])
 def add_scooter():
-    # try:
+    try:
         if 'username' in session and session['username'] == "manager":
             if request.method == 'GET' :
                 docking_station_details = db.docking_station.find({})
                 return render_template("add_scooter.html",docking_station_details = docking_station_details)
             else:
-                data = {"registration_number":request.form['registration_number'],"insurance_number":request.form['insurance_number'],"insurance_valid_till":request.form['insurance_valid_till'],"docking_station":request.form['docking_station'],"ignition_status":"off","rider_name":"-"}
+                data = {"registration_number":request.form['registration_number'],"insurance_number":request.form['insurance_number'],"insurance_valid_till":request.form['insurance_valid_till'],"docking_station":request.form["docking_station"],"ignition_status":"off","rider_name":"-"}
+                print(request.form["docking_station"])
                 db.scooter.insert(data)
                 x = db.docking_station.find({"station_name":request.form['docking_station']})
                 num = x[0]["no_of_scooters"]
@@ -96,50 +101,78 @@ def add_scooter():
                 return redirect('/manager')
         else:
             return "You are not logged in <br><a href = '/login'></b>" + "click here to log in</b></a>"
-    # except:
-    #     return render_template("add_scooter.html")
+    except:
+        return render_template("add_scooter.html")
 
 @app.route('/start_ride', methods = ['POST','GET'])
 def start_ride():
     try:
         if 'username' in session and session['username'] != "manager":
-            if request.method == 'GET':
+            if request.method == 'POST':
                 username = session['username']
-                scooter_data = db.scooter.find({})
+                scooter_data = db.scooter.find({"docking_station":request.form['station_name']})
+                db.details.update({"name":session['username']},{"$set":{"from":request.form['station_name']}})
                 return render_template("start_ride.html",username = username,scooter_data = scooter_data)
-            else:
-                return redirect('/end_ride')
+            else: 
+                return render_template("start_ride.html")
         else:
             return "You are not logged in <br><a href = '/login'></b>" + "click here to log in</b></a>"
     except:
-        return render_template('/start_ride.html')
+        return redirect('/start_ride')
 
 @app.route('/end_ride', methods = ['POST','GET'])
 def end_ride():
     try:
         if 'username' in session and session['username'] != "manager":
-            if request.method == 'GET':
+            if request.method == 'POST':
                 username = session['username']
                 docking_station_data = db.docking_station.find({})
+                a = datetime.datetime.now()
+                start_time = a.strftime("%c")
+                db.details.update({"name":session['username']},{"$set":{"registration_number":request.form['registration_number'],"start_time":start_time}})
                 return render_template("end_ride.html",username = username,docking_station_data = docking_station_data)
             else:
-                return redirect('/bill')
+                return redirect('/end_ride')
         else:
             return "You are not logged in <br><a href = '/login'></b>" + "click here to log in</b></a>"
     except:
         return render_template('/end_ride.html')
 
-@app.route('/bill')
+@app.route('/bill',methods = ['POST','GET'])
 def bill():
     try:
         if 'username' in session and session['username'] != "manager":
+          if request.method == 'POST':
             a = datetime.datetime.now()
-            time = a.strftime("%c")
-            return render_template("bill.html",time = time)
+            end_time = a.strftime("%c")
+            db.details.update({"name":session['username']},{"$set":{"destination":request.form['destination'],"end_time":end_time}})
+            data = db.details.find({"name":session['username']})
+            start_time = data[0]["start_time"]
+            a = start_time.split(" ")
+            time = a[3].split(":")
+            before_hour = int(time[0])
+            before_min = int(time[1])
+            
+            a = end_time.split(" ")
+            time = a[3].split(":")
+            after_hour = int(time[0])
+            after_min = int(time[1])
+            #calculaitng ride timming
+            hour = after_hour - before_hour -1
+            minutes = after_min + (60 - before_min) + (hour*60)
+            quo = int(minutes/30)
+            rem = minutes%30
+            if rem == 0:
+                amount = quo*50
+            else:
+                amount = (quo + 1 )*50
+            return render_template("bill.html",time = end_time,data = data,minutes = minutes,amount = amount,username = session['username'])
+          else:
+              return render_template("bill.html")
         else:
             return "You are not logged in <br><a href = '/login'></b>" + "click here to log in</b></a>"
     except:
-        return render_template("bill.html")
+        return redirect('/bill')
 
 @app.route('/add_station',methods = ['POST','GET'])
 def add_station():
@@ -147,7 +180,7 @@ def add_station():
         if request.method == 'POST':
             data = {"station_name":request.form["station_name"],"no_of_scooters":0}
             db.docking_station.insert(data)
-            return "true"
+            return render_template("manager.html")
         else:
             return render_template("manager.html")
     except:

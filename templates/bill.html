@@ -8,11 +8,11 @@
                   <h3>Hello , {{ username }} </h3>
               </div>
             <div class="block">
-                <p><i class="icons f7-icons">person_crop_circle </i><a href="/home" class = "external">Home</a></p>
-                <p><i class="icons f7-icons">rocket_fill </i><a href="#" class = "external">Rides</a></p>
-                <p><i class="icons f7-icons">calendar_badge_plus </i><a href="#" class = "external">Payments</a></p>
-                <p><i class="icons f7-icons">wrench_fill </i><a href="#" class = "external">Profile Settings</a></p>
-                <p><i class="icons f7-icons">square_arrow_right </i><a href="/logout" class = "external">Logout</a></p>
+                <p><i class="icons f7-icons">person_crop_circle </i> &NonBreakingSpace;<a href="/home" class = "external">Home</a></p>
+                <p><i class="icons f7-icons">rocket_fill </i> &NonBreakingSpace;<a href="#" class = "external">Rides</a></p>
+                <p><i class="icons f7-icons">calendar_badge_plus </i> &NonBreakingSpace;<a href="#" class = "external">Payments</a></p>
+                <p><i class="icons f7-icons">wrench_fill </i> &NonBreakingSpace;<a href="#" class = "external">Profile Settings</a></p>
+                <p><i class="icons f7-icons">square_arrow_right </i> &NonBreakingSpace;<a href="/logout" class = "external">Logout</a></p>
                 <p><a class="panel-close" href="#">Close me</a></p>
             </div>
           </div>
@@ -39,32 +39,32 @@
                     <!-- <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d15594.062518588431!2d76.64893305!3d12.281023200000002!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!4m3!3e6!4m0!4m0!5e0!3m2!1sen!2sin!4v1573389283634!5m2!1sen!2sin" width="700" height="350" frameborder="0" style="border:0;" allowfullscreen=""></iframe> -->
                     <img src="static/images/logo.png" >
                 </div>
-                
+               
             <div class="card card-outline">
                 <div class="card-header " >
                     <div class = "left">
                            <h3>{{ time }}</h3> 
                     </div>
                     <div class = "right">
-                        <h3>Total Amount : </h3>
+                        <h3> &#x20B9; {{ amount }}</h3>
                     </div>
                 </div>
                 <div class="card-content card-content-padding ">
-                    
-                    <h3>Ride timmings : </h2 h3>
-                    <h3 class="color-theme-red"><i class="icons f7-icons">arrow_right</i></h2h3>
-                    <h3><i class="icons f7-icons">arrow_left</i></h2 h3>
-                    <h3>0 Mins</hh3>
-                    
+                    {% for i in data %}
+                    <h3>Ride timmings :&NonBreakingSpace;{{ i["start_time"]}} - {{i["end_time"]}} </h3>
+                    <h3><i class="icons f7-icons">arrow_right</i> &NonBreakingSpace; {{ i["from"] }}</h3>
+                    <h3><i class="icons f7-icons">arrow_left</i> &NonBreakingSpace;{{ i["destination"] }}</h3>
+                    <h3>{{ minutes }} mins. </h3>
+                    {% endfor %}
                 </div>
                 <div class="card-footer">
                   <h3>Balance :</h3>
                   <div class = "right">
-                      <a href = "/home" class= "external" ><button class="col button button-fill">OK</button></a> 
+                      <a href = "/home" class= "external" ><button class="col button button-outline button-raised">OK</button></a> 
                   </div>
                  </div>
             </div>
-                
+               
             </div>
         </div>
     </div>
