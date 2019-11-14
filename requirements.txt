@@ -1,7 +1,7 @@
 Flask
+gunicorn
+Jinja2
+Werkzeug
+dnspython
 pymongo
 flask_mail
-dnspython
-Jinja2
-gunicorn
-Werkzeug
