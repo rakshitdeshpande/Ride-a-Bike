@@ -8,10 +8,14 @@ app = Flask(__name__)
 
 app.secret_key = 'Ride-a-Bike'
 
-file = open("db_name","r")
-username = file.read()
-file = open("db_pass","r")
-password = file.read()
+#accesing environment variables
+admin_name = os.environ['ADMIN_NAME']
+admin_pass = os.environ['ADMIN_PASS']
+db_username = os.environ['DB_USERNAME']
+db_pass = os.environ['DB_PASS']
+id = os.environ['MAIL_PASS']
+mail_id = os.environ['MAIL_ID']
+
 client = pymongo.MongoClient("mongodb+srv://"+username+":"+password+"@cluster0-2ogac.mongodb.net/test?retryWrites=true&w=majority")
 db = client["ride-a-bike"]
 
