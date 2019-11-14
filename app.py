@@ -148,7 +148,6 @@ def end_ride():
         return render_template("start_ride.html")
 
     
-
 @app.route('/bill',methods = ['POST','GET'])
 def bill():
     try:
@@ -196,12 +195,15 @@ def bill():
 @app.route('/add_station',methods = ['POST','GET'])
 def add_station():
     try :
+      if 'username' in session and session['username'] == "manager":
         if request.method == 'POST':
             data = {"station_name":request.form["station_name"],"no_of_scooters":0}
             db.docking_station.insert(data)
             return render_template("manager.html")
         else:
             return render_template("manager.html")
+      else:
+          "You are not logged in <br><a href = '/login'></b>" + "click here to log in</b></a>"
     except:
         return render_template("manager.html")
 
@@ -237,23 +239,47 @@ def notFound(e):
 
 @app.route('/delete_scooter')
 def delete_scooter():
-    db.scooter.delete_many({})
-    return render_template("index.html")
+  try:
+    if 'username' in session and session['username'] == "manager":
+        db.scooter.delete_many({})
+        return render_template("index.html")
+    else:
+        "You are not logged in <br><a href = '/login'></b>" + "click here to log in</b></a>"
+  except:
+      return redirect("/")
 
 @app.route('/delete_station')
 def delete_station():
-    db.docking_station.delete_many({})
-    return render_template("index.html")
+  try:
+    if 'username' in session and session['username'] == "manager":
+        db.docking_station.delete_many({})
+        return render_template("index.html")
+    else:
+        "You are not logged in <br><a href = '/login'></b>" + "click here to log in</b></a>"
+  except:
+      return redirect("/")
 
 @app.route('/delete_details')
 def delete_details():
-    db.details.delete_many({})
-    return render_template("index.html")
+  try:
+    if 'username' in session and session['username'] == "manager":
+        db.details.delete_many({})
+        return render_template("index.html")
+    else:
+        "You are not logged in <br><a href = '/login'></b>" + "click here to log in</b></a>"
+  except:
+      return redirect("/")
 
 @app.route('/clear_logs')
 def clear_logs():
-    db.logs.delete_many({})
-    return render_template("index.html")
+  try:
+    if 'username' in session and session['username'] == "manager":
+        db.logs.delete_many({})
+        return render_template("index.html")
+    else:
+        "You are not logged in <br><a href = '/login'></b>" + "click here to log in</b></a>"
+  except:
+      return redirect("/")
 
     
 if __name__ == '__main__':
