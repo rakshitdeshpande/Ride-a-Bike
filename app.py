@@ -9,14 +9,14 @@ app = Flask(__name__)
 app.secret_key = 'Ride-a-Bike'
 
 #accesing environment variables
-admin_name = os.environ['ADMIN_NAME']
-admin_pass = os.environ['ADMIN_PASS']
+manager_name = os.environ['MANAGER_NAME']
+manager_pass = os.environ['MANAGER_PASS']
 db_username = os.environ['DB_USERNAME']
-db_pass = os.environ['DB_PASS']
+db_password = os.environ['DB_PASS']
 id = os.environ['MAIL_PASS']
 mail_id = os.environ['MAIL_ID']
 
-client = pymongo.MongoClient("mongodb+srv://"+username+":"+password+"@cluster0-2ogac.mongodb.net/test?retryWrites=true&w=majority")
+client = pymongo.MongoClient("mongodb+srv://"+db_username+":"+db_password+"@cluster0-2ogac.mongodb.net/test?retryWrites=true&w=majority")
 db = client["ride-a-bike"]
 
 @app.route('/')
@@ -44,10 +44,10 @@ def login():
         return render_template("login.html")
     else:
         try:
-            if request.form['name'] == "admin" and request.form['password'] == "admin":
-                session['username'] = request.form['name']
-                return "admin"
-            elif request.form['name'] == "manager" and request.form['password'] == "manager":
+            # if request.form['name'] == "admin" and request.form['password'] == "admin":
+            #     session['username'] = request.form['name']
+            #     return "admin"
+            if request.form['name'] == manager_name and request.form['password'] == manager_pass:
                 session['username'] = request.form['name']
                 return redirect('/manager')
             else:
