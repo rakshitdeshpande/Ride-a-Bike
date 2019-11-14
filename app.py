@@ -82,6 +82,8 @@ def manager():
     except:
         return redirect('/manager')
 
+# add scooter not working
+
 @app.route('/add_scooter', methods = ['POST','GET'])
 def add_scooter():
     try:
@@ -129,14 +131,23 @@ def end_ride():
                 docking_station_data = db.docking_station.find({})
                 a = datetime.datetime.now()
                 start_time = a.strftime("%c")
+                data = db.scooter.find({"registration_number":request.form['registration_number']})
+                station  = data[0]["docking_station"]
                 db.details.update({"name":session['username']},{"$set":{"registration_number":request.form['registration_number'],"start_time":start_time}})
+                db.scooter.update({"registration_number":request.form['registration_number']},{"$set":{"rider_name":session['username'],"ignition_status":"on","docking_station":"-"}})
+                details = db.docking_station.find({"station_name":station})
+                num = details[0]["no_of_scooters"]
+                num = num - 1
+                db.docking_station.update({"station_name":station},{"$set":{"no_of_scooters":num}})
                 return render_template("end_ride.html",username = username,docking_station_data = docking_station_data)
             else:
                 return redirect('/end_ride')
         else:
             return "You are not logged in <br><a href = '/login'></b>" + "click here to log in</b></a>"
     except:
-        return render_template('/end_ride.html')
+        return render_template("start_ride.html")
+
+    
 
 @app.route('/bill',methods = ['POST','GET'])
 def bill():
@@ -146,6 +157,12 @@ def bill():
             a = datetime.datetime.now()
             end_time = a.strftime("%c")
             db.details.update({"name":session['username']},{"$set":{"destination":request.form['destination'],"end_time":end_time}})
+            db.scooter.update({"rider_name":session['username']},{"$set":{"docking_station":request.form['destination'],"ignition_status":"off","rider_name":"-"}})
+            details = db.docking_station.find({"station_name":request.form['destination']})
+            print(details[0]["no_of_scooters"])
+            num = details[0]["no_of_scooters"]
+            num = num + 1
+            db.docking_station.update({"station_name":request.form['destination']},{"$set":{"no_of_scooters":num}})
             data = db.details.find({"name":session['username']})
             start_time = data[0]["start_time"]
             a = start_time.split(" ")
@@ -166,13 +183,15 @@ def bill():
                 amount = quo*50
             else:
                 amount = (quo + 1 )*50
+            details = {"name":session['username'],"registration_number":data[0]["registration_number"],"from":data[0]["from"],"start_time":data[0]["start_time"],"destination":data[0]["destination"],"end_time":data[0]["end_time"],"amount":amount,"duration":minutes}
+            db.logs.insert(details)
             return render_template("bill.html",time = end_time,data = data,minutes = minutes,amount = amount,username = session['username'])
           else:
               return render_template("bill.html")
         else:
             return "You are not logged in <br><a href = '/login'></b>" + "click here to log in</b></a>"
     except:
-        return redirect('/bill')
+        return redirect('/end_ride')
 
 @app.route('/add_station',methods = ['POST','GET'])
 def add_station():
@@ -228,9 +247,14 @@ def delete_station():
 
 @app.route('/delete_details')
 def delete_details():
-    db.docking_station.delete_many({})
+    db.details.delete_many({})
     return render_template("index.html")
 
+@app.route('/clear_logs')
+def clear_logs():
+    db.logs.delete_many({})
+    return render_template("index.html")
 
+    
 if __name__ == '__main__':
     app.run(host="0.0.0.0",port=5000, threaded = True, debug = True)
