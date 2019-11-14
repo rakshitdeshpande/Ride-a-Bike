@@ -1,0 +1,7 @@
+Flask
+pymongo
+flask_mail
+dnspython
+Jinja2
+gunicorn
+Werkzeug
