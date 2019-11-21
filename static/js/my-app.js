@@ -1,9 +1,9 @@
 var app = new Framework7({
   root: '#app',
   // App Name
-  name: 'Smart Key',
+  name: 'Ride-a-Bike',
   // App id
-  id: 'com.snp.concepts',
+  id: 'app.ride-a-bike.com',
   // Enable swipe panel
   panel: {
     swipe: 'left',

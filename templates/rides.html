@@ -1,5 +1,5 @@
 {% extends 'base.html' %}
-{% block title %}Home{% endblock %}
+{% block title %}Rides{% endblock %}
 
 {% block body_content %}
         <div class="panel panel-left panel-right-2 panel-cover panel-init theme-dark">
@@ -9,9 +9,9 @@
               </div>
             <div class="block">
                 <p><i class="icons f7-icons">person_crop_circle </i>&NonBreakingSpace;<a href="/home" class = "external">Home</a></p>
-                <p><i class="fa fa-bicycle" style="font-size:28px;"></i>&NonBreakingSpace;<a href="/rides" class = "external">Rides</a></p>
+                <p> <i class="fa fa-bicycle" style="font-size:28px;"></i>&NonBreakingSpace;<a href="/rides" class = "external">Rides</a></p>
                 <p><i class="icons f7-icons">calendar_badge_plus </i>&NonBreakingSpace;<a href="#" class = "external">Payments</a></p>
-                <p><i class="icons f7-icons">wrench_fill </i>&NonBreakingSpace;<a href="#" class = "external">Account Settings</a></p>
+                <p><i class="icons f7-icons">wrench_fill </i>&NonBreakingSpace;<a href="#" class = "external">Profile Settings</a></p>
                 <p><i class="icons f7-icons">square_arrow_right </i>&NonBreakingSpace;<a href="/logout" class = "external">Logout</a></p>
                 <p><a class="panel-close" href="#">Close me</a></p>
             </div>
@@ -36,31 +36,29 @@
               </div>
             </div>
             <div class="page-content">
-                <div class="block text-align-center">
-                    <!-- <p align="center">
+                <!-- <div class="block text-align-center">
+                    <p align="center">
                       <img src="static/images/logo.png" >
-                    </p> -->
-                </div>
-                <div class="block block-strong color-theme-green">
-                  {% for i in docking_station_details %}
-                  <div class = "block">
-                    <div class="card">
-                      <div class="card-header">
-                        <h4> {{ i["station_name"] }}</h4>
-                        <div class = "right">
-                            <form action="/start_ride" method = 'POST'>
-                              <input type = "hidden" name = "station_name" value = "{{ i["station_name"] }}" />
-                              <button class="col button button-outline button-raised">Select</button>
-                            </form>
+                    </p>
+                </div> -->
+                {% for i in data %}
+                    <div class="card card-outline">
+                        <div class="card-content card-content-padding">
+                            <p><i class="icons f7-icons">arrow_right</i> &NonBreakingSpace; {{ i["from"] }}</p>
+                            <p>Check out : &NonBreakingSpace;{{ i["start_time"] }}</p>
+                            <p><i class="icons f7-icons">arrow_left</i> &NonBreakingSpace; {{ i["destination"] }}</p>
+                            <p>Check in : &NonBreakingSpace;{{ i["end_time"] }}</p>
                         </div>
-                      </div>
-                      <div class="card-content card-content-padding">
-                          <h4>Number of scooters : {{ i["no_of_scooters"] }}</h4>
-                      </div>
+                        <div class="card-footer">
+                            <div class = "left">
+                                {{i["duration"] }}.Mins
+                            </div>
+                            <div class = "right">
+                                &#x20B9; {{i["amount"] }}
+                            </div>
+                        </div>
                     </div>
-                  </div>
-                  {% endfor %}
-                </div>
+                {% endfor %}
             </div>
           </div>
         </div>

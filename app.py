@@ -177,7 +177,6 @@ def bill():
             db.details.update({"name":session['username']},{"$set":{"destination":request.form['destination'],"end_time":end_time}})
             db.scooter.update({"rider_name":session['username']},{"$set":{"docking_station":request.form['destination'],"ignition_status":"off","rider_name":"-"}})
             details = db.docking_station.find({"station_name":request.form['destination']})
-            print(details[0]["no_of_scooters"])
             num = details[0]["no_of_scooters"]
             num = num + 1
             db.docking_station.update({"station_name":request.form['destination']},{"$set":{"no_of_scooters":num}})
@@ -203,7 +202,7 @@ def bill():
                 amount = (quo + 1 )*50
             details = {"name":session['username'],"registration_number":data[0]["registration_number"],"from":data[0]["from"],"start_time":data[0]["start_time"],"destination":data[0]["destination"],"end_time":data[0]["end_time"],"amount":amount,"duration":minutes}
             db.logs.insert(details)
-            db.details.update({"name":session['username']},{"$set":{"from":"-","desination":"-","registration_number":"-","start_time":"-","end_time":"-"}})
+            # db.details.update({"name":session['username']},{"$set":{"from":"-","destination":"-","registration_number":"-","start_time":"-","end_time":"-"}})
             return render_template("bill.html",time = end_time,data = data,minutes = minutes,amount = amount,username = session['username'])
           else:
               return render_template("bill.html")
@@ -248,6 +247,17 @@ def remove_station():
                 return render_template("manager.html")
     except:
         return render_template("manager.html")
+
+@app.route('/rides')
+def rides():
+    # try :
+        if 'username' in session and session['username'] != manager_name:
+            data = db.logs.find({"name":session['username']})
+            return render_template("rides.html", data = data ,username = session['username'])
+        else:
+            return "You are not logged in <br><a href = '/login'></b>" + "click here to log in</b></a>"
+    # except:
+    #     return redirect('/home')
 
 @app.route('/logout')
 def logout():
