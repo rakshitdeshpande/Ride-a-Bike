@@ -250,14 +250,38 @@ def remove_station():
 
 @app.route('/rides')
 def rides():
-    # try :
+    try :
         if 'username' in session and session['username'] != manager_name:
-            data = db.logs.find({"name":session['username']})
+            data = db.logs.find({"name":session['username']}).sort([("start_time",pymongo.DESCENDING)])
             return render_template("rides.html", data = data ,username = session['username'])
         else:
             return "You are not logged in <br><a href = '/login'></b>" + "click here to log in</b></a>"
-    # except:
-    #     return redirect('/home')
+    except:
+        return redirect('/home')
+
+@app.route('/account_settings',methods = ['POST','GET'])
+def accout_settings():
+    try:
+        if 'username' in session and session['username'] != manager_name:
+            if request.method == 'POST':
+                if request.form['email'] != "":
+                    db.details.update({"name":session['username']},{"$set":{"email":request.form['email']}})
+                if request.form['phone_number'] != "":
+                    db.details.update({"name":session['username']},{"$set":{"phone_number":request.form['phone_number']}})
+                if request.form['dl_valid_till'] != "":
+                    db.details.update({"name":session['username']},{"$set":{"dl_valid_till":request.form['dl_valid_till']}})
+                if request.form['password'] != "":
+                    password = request.form['password']
+                    pass_256 = hashlib.sha256(password.encode())
+                    pass_encrypt = pass_256.hexdigest()
+                    db.details.update({"name":session['username']},{"$set":{"password":pass_encrypt}})
+                return redirect('/home')
+            else:
+                return render_template("update.html", username = session['username'])
+        else:
+            return "You are not logged in <br><a href = '/login'></b>" + "click here to log in</b></a>"
+    except:
+        return redirect('/home')
 
 @app.route('/logout')
 def logout():

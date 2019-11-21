@@ -1,0 +1,152 @@
+{% extends 'base.html' %}
+{% block title %}Update{% endblock %}
+
+{% block body_content %}
+<div class="panel panel-left panel-right-2 panel-cover panel-init theme-dark">
+    <div class="page">
+        <div class = "block">
+            <h3>Hello , {{ username }} </h3>
+        </div>
+      <div class="block">
+          <p><i class="icons f7-icons">person_crop_circle </i>&NonBreakingSpace;<a href="/home" class = "external">Home</a></p>
+          <p><i class="fa fa-bicycle" style="font-size:28px;"></i>&NonBreakingSpace;<a href="/rides" class = "external">Rides</a></p>
+          <p><i class="icons f7-icons">calendar_badge_plus </i>&NonBreakingSpace;<a href="#" class = "external">Payments</a></p>
+          <p><i class="icons f7-icons">wrench_fill </i>&NonBreakingSpace;<a href="/account_settings" class = "external">Account Settings</a></p>
+          <p><i class="icons f7-icons">square_arrow_right </i>&NonBreakingSpace;<a href="/logout" class = "external">Logout</a></p>
+          <p><a class="panel-close" href="#">Close me</a></p>
+      </div>
+    </div>
+  </div>
+  <div class="view view-main view-init">
+    <div class="page">
+      <div class="navbar">
+        <div class="navbar-bg"></div>
+        <div class="navbar-inner">
+              <div class="left">
+                      <p><a class="button panel-open" href="#" data-panel=".panel-right-2"><i class="icons f7-icons">menu</i></a></p>
+                      <!-- <div class= "block">
+                          <img src="static/images/logo.png" height="50px" width = "50px" >
+                      </div> -->
+                  </div>
+                  <div class="title">Account Settings</div>
+        </div>
+      </div>
+        <div class="page-content">
+                    <div class="block text-align-center">
+                      <p align="center">
+                        <img src="static/images/logo.png" height="150px" width="150px">
+                      </p>
+                    </div>
+                <form action="/account_settings" method = 'POST' >
+                    <div class="list no-hairlines-md">
+                      <ul>
+                        <li class="item-content item-input item-input-outline">
+                            <div class="item-media">
+                                <i class="icons f7-icons">envelope_fill</i>
+                            </div>
+                            <div class="item-inner">
+                                <div class="item-title item-floating-label">E-mail ID</div>
+                                    <div class="item-input-wrap">
+                                        <input type="email" placeholder="Your e-mail" name = "email"/>
+                                        <span class="input-clear-button"></span>
+                                    </div>
+                            </div>
+                        </li>
+                        <li class="item-content item-input item-input-outline">
+                            <div class="item-media">
+                                <i class="icons f7-icons">phone_fill</i>
+                            </div>
+                            <div class="item-inner">
+                                <div class="item-title item-floating-label">Phone Number</div>
+                                    <div class="item-input-wrap">
+                                        <input type="tel" placeholder="Your phone number" name = "phone_number" />
+                                        <span class="input-clear-button"></span>
+                                    </div>
+                            </div>
+                        </li>
+                        <li class="item-content item-input item-input-outline">
+                            <div class="item-media">
+                                <i class="icons f7-icons">calendar</i>
+                            </div>
+                            <div class="item-inner">
+                                <div class="item-title item-floating-label">DL Valid Till</div>
+                                    <div class="item-input-wrap">
+                                        <input type="text" placeholder="Select date" readonly="readonly" name="dl_valid_till" id="dl-valid" />
+                                        <span class="input-clear-button"></span>
+                                    </div>
+                            </div>
+                        </li>
+                        <li class="item-content item-input item-input-outline">
+                            <div class="item-media">
+                                <i class="icons f7-icons">lock_fill</i>
+                            </div>
+                            <div class="item-inner">
+                                <div class="item-title item-floating-label">Password</div>
+                                    <div class="item-input-wrap">
+                                        <input type="password" placeholder="Your password" name="password"/>
+                                            <span class="input-clear-button"></span>
+                                    </div>
+                            </div>
+                        </li>
+                      </ul>
+                    </div>
+                    <div class = "block">
+                        <p class = "row">
+                           <input class="col button button-fill button-round " type="submit" value="Update"/>
+                        </p>
+                    </div>
+                </form>                  
+    
+{% endblock %}
+
+{% block scripts %}
+<script type="text/javascript">
+
+var $$ = Dom7;
+
+// Create bottom toast
+var toastBottom = app.toast.create({
+  text: 'Signing You Up ...',
+  closeTimeout: 3000,
+});
+
+$$('.open-toast-bottom').on('click', function () {
+  toastBottom.open();
+});
+
+var today = new Date();
+
+var calendarDisabled = app.calendar.create({
+    inputEl: '#dl-valid',
+    closeOnSelect: false,
+    openIn: 'auto',
+    header: true,
+    footer: true,
+    animate : true,
+    dateFormat: 'dd-mm-yyyy',
+    disabled: {
+      from : new Date(1,1,1970),
+      to: today,
+      
+    },
+    convertToPopover : true,
+});
+
+var calendarDisabled = app.calendar.create({
+    inputEl: '#date-of-birth',
+    closeOnSelect: false,
+    openIn: 'auto',
+    header: true,
+    footer: true,
+    animate : true,
+    dateFormat: 'dd-mm-yyyy',
+    disabled: {
+      from: today,
+      
+    },
+    convertToPopover : true,
+});
+
+
+</script>
+{% endblock %}
