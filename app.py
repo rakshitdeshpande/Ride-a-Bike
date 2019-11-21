@@ -1,4 +1,8 @@
-import pymongo,datetime,hashlib,math
+'''
+        Ride-a-Bike
+        Developer : Rakshit Deshpande
+'''
+import pymongo,datetime,hashlib,math,pytz
 from flask import Flask, render_template, url_for, redirect, request ,flash ,session
 from pymongo import MongoClient
 from flask_mail import Mail,Message
@@ -65,7 +69,7 @@ def login():
 
 @app.route('/home',methods = ['POST','GET'])
 def home():
-    if 'username' in session and session['username'] != "manager":
+    if 'username' in session and session['username'] != manager_name:
       if request.method == 'GET':
         username = session['username']
         scooter_details = db.scooter.find({})
@@ -80,31 +84,42 @@ def home():
 @app.route('/manager')
 def manager():
     try:
-        if 'username' in session and session['username'] == "manager":
+        if 'username' in session and session['username'] == manager_name:
             return render_template("manager.html")
         return "You are not logged in <br><a href = '/login'></b>" + "click here to log in</b></a>"
     except:
         return redirect('/manager')
 
-# add scooter not working
+
 
 @app.route('/add_scooter', methods = ['POST','GET'])
 def add_scooter():
     try:
-        if 'username' in session and session['username'] == "manager":
+        if 'username' in session and session['username'] == manager_name:
             if request.method == 'GET' :
                 docking_station_details = db.docking_station.find({})
                 return render_template("add_scooter.html",docking_station_details = docking_station_details)
             else:
                 data = {"registration_number":request.form['registration_number'],"insurance_number":request.form['insurance_number'],"insurance_valid_till":request.form['insurance_valid_till'],"docking_station":request.form["docking_station"],"ignition_status":"off","rider_name":"-"}
-                print(request.form["docking_station"])
-                db.scooter.insert(data)
-                x = db.docking_station.find({"station_name":request.form['docking_station']})
-                num = x[0]["no_of_scooters"]
-                num = num + 1
-                print(num)
-                db.docking_station.update({"station_name":request.form['docking_station']},{"$set":{"no_of_scooters":num}})
-                return redirect('/manager')
+                x = db.scooter.find({"registration_number":request.form['registration_number']})
+                y = db.scooter.find({"insurance_number":request.form['insurance_number']})
+                docking_station_details = db.docking_station.find({})
+                try :
+                    if x[0] :
+                        error = "A vehicle with registration number already exists!"
+                    return render_template("add_scooter.html",error = error,docking_station_details = docking_station_details)
+                except:
+                    try:
+                        if y[0] :
+                            error = "Insurance Number is of different vehicle"
+                            return render_template("add_scooter.html",error = error,docking_station_details = docking_station_details)
+                    except:
+                        db.scooter.insert(data)
+                        x = db.docking_station.find({"station_name":request.form['docking_station']})
+                        num = x[0]["no_of_scooters"]
+                        num = num + 1
+                        db.docking_station.update({"station_name":request.form['docking_station']},{"$set":{"no_of_scooters":num}})
+                        return redirect('/manager')
         else:
             return "You are not logged in <br><a href = '/login'></b>" + "click here to log in</b></a>"
     except:
@@ -113,7 +128,7 @@ def add_scooter():
 @app.route('/start_ride', methods = ['POST','GET'])
 def start_ride():
     try:
-        if 'username' in session and session['username'] != "manager":
+        if 'username' in session and session['username'] != manager_name:
             if request.method == 'POST':
                 username = session['username']
                 scooter_data = db.scooter.find({"docking_station":request.form['station_name']})
@@ -129,11 +144,11 @@ def start_ride():
 @app.route('/end_ride', methods = ['POST','GET'])
 def end_ride():
     try:
-        if 'username' in session and session['username'] != "manager":
+        if 'username' in session and session['username'] != manager_name:
             if request.method == 'POST':
                 username = session['username']
                 docking_station_data = db.docking_station.find({})
-                a = datetime.datetime.now()
+                a = datetime.datetime.now(pytz.timezone('Asia/Calcutta'))
                 start_time = a.strftime("%c")
                 data = db.scooter.find({"registration_number":request.form['registration_number']})
                 station  = data[0]["docking_station"]
@@ -155,9 +170,9 @@ def end_ride():
 @app.route('/bill',methods = ['POST','GET'])
 def bill():
     try:
-        if 'username' in session and session['username'] != "manager":
+        if 'username' in session and session['username'] != manager_name:
           if request.method == 'POST':
-            a = datetime.datetime.now()
+            a = datetime.datetime.now(pytz.timezone('Asia/Calcutta'))
             end_time = a.strftime("%c")
             db.details.update({"name":session['username']},{"$set":{"destination":request.form['destination'],"end_time":end_time}})
             db.scooter.update({"rider_name":session['username']},{"$set":{"docking_station":request.form['destination'],"ignition_status":"off","rider_name":"-"}})
@@ -199,7 +214,7 @@ def bill():
 @app.route('/add_station',methods = ['POST','GET'])
 def add_station():
     try :
-      if 'username' in session and session['username'] == "manager":
+      if 'username' in session and session['username'] == manager_name:
         if request.method == 'POST':
             data = {"station_name":request.form["station_name"],"no_of_scooters":0}
             db.docking_station.insert(data)
@@ -214,20 +229,22 @@ def add_station():
 @app.route('/remove_scooter',methods = ['POST','GET'])
 def remove_scooter():
     try :
-        if request.method == 'POST':
-            return "request accepted!"
-        else:
-            return render_template("manager.html")
+        if 'username' in session and session['username'] == manager_name:
+            if request.method == 'POST':
+                return "request accepted!"
+            else:
+                return render_template("manager.html")
     except:
         return render_template("manager.html")
     
 @app.route('/remove_station',methods = ['POST','GET'])
 def remove_station():
     try :
-        if request.method == 'POST':
-            return "request accepted!"
-        else:
-            return render_template("manager.html")
+        if 'username' in session and session['username'] == manager_name:
+            if request.method == 'POST':
+                return "request accepted!"
+            else:
+                return render_template("manager.html")
     except:
         return render_template("manager.html")
 
@@ -244,7 +261,7 @@ def notFound(e):
 @app.route('/delete_scooter')
 def delete_scooter():
   try:
-    if 'username' in session and session['username'] == "manager":
+    if 'username' in session and session['username'] == manager_name:
         db.scooter.delete_many({})
         return render_template("index.html")
     else:
@@ -255,7 +272,7 @@ def delete_scooter():
 @app.route('/delete_station')
 def delete_station():
   try:
-    if 'username' in session and session['username'] == "manager":
+    if 'username' in session and session['username'] == manager_name:
         db.docking_station.delete_many({})
         return render_template("index.html")
     else:
@@ -266,7 +283,7 @@ def delete_station():
 @app.route('/delete_details')
 def delete_details():
   try:
-    if 'username' in session and session['username'] == "manager":
+    if 'username' in session and session['username'] == manager_name:
         db.details.delete_many({})
         return render_template("index.html")
     else:
@@ -277,7 +294,7 @@ def delete_details():
 @app.route('/clear_logs')
 def clear_logs():
   try:
-    if 'username' in session and session['username'] == "manager":
+    if 'username' in session and session['username'] == manager_name:
         db.logs.delete_many({})
         return render_template("index.html")
     else:

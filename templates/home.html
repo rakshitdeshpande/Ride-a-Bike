@@ -46,7 +46,7 @@
                   <div class = "block">
                     <div class="card">
                       <div class="card-header">
-                        <h4>Docking Station : {{ i["station_name"] }}</h4>
+                        <h4> {{ i["station_name"] }}</h4>
                         <div class = "right">
                             <form action="/start_ride" method = 'POST'>
                               <input type = "hidden" name = "station_name" value = "{{ i["station_name"] }}" />

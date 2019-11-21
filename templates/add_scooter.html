@@ -17,6 +17,11 @@
                             
                         </div>
                 </div>
+                {% if error %}
+                <script type="text/javascript">
+                   alert("ERROR : {{ error }}");  
+                </script>
+                {% endif %}
                 <form action="/add_scooter" method = 'POST'>
                         <div class="list no-hairlines-md">
                           <ul>
@@ -80,7 +85,7 @@
                                 </p>
                         </div>
                 </form>
-
+                
         </div>
 </div>
 {% endblock %}
