@@ -3,7 +3,7 @@ var app = new Framework7({
   // App Name
   name: 'Ride-a-Bike',
   // App id
-  id: 'ride-a-bike.paper.app',
+  id: 'app.ride-a-bike.com',
   // Enable swipe panel
   panel: {
     swipe: 'left',

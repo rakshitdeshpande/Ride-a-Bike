@@ -37,7 +37,7 @@ def signup():
         password = request.form['password']
         pass_256 = hashlib.sha256(password.encode())
         pass_encrypt = pass_256.hexdigest()
-        cred = {"name":request.form['name'],"email":request.form['email'],"phone_number":request.form['phone_number'],"gender":request.form['gender'],"blood_group":request.form['blood_group'],"dob":request.form['dob'],"dl_number":request.form['dl_number'],"dl_valid_till":request.form['dl_valid_till'],"password":pass_encrypt}
+        cred = {"name":request.form['name'],"email":request.form['email'],"phone_number":request.form['phone_number'],"gender":request.form['gender'],"blood_group":request.form['blood_group'],"dob":request.form['dob'],"dl_number":request.form['dl_number'],"dl_valid_till":request.form['dl_valid_till'],"password":pass_encrypt,"balance":0}
         db.details.insert(cred) 
         session['username'] = request.form['name']
         return redirect('/home')
@@ -74,7 +74,9 @@ def home():
         username = session['username']
         scooter_details = db.scooter.find({})
         docking_station_details = db.docking_station.find({})
-        return render_template("home.html",username = username,docking_station_details=docking_station_details)
+        amt = db.details.find({"name":session['username']})
+        amount = amt[0]["balance"]
+        return render_template("home.html",username = username,docking_station_details=docking_station_details,amount = amount)
       else:
           
           return redirect('/start_ride')
@@ -85,7 +87,9 @@ def home():
 def manager():
     try:
         if 'username' in session and session['username'] == manager_name:
-            return render_template("manager.html")
+            data = db.details.find({"status":"riding"})
+            logs = db.logs.find({}).sort([("start_time",pymongo.DESCENDING)])
+            return render_template("manager.html", data = data, logs = logs)
         return "You are not logged in <br><a href = '/login'></b>" + "click here to log in</b></a>"
     except:
         return redirect('/manager')
@@ -132,7 +136,7 @@ def start_ride():
             if request.method == 'POST':
                 username = session['username']
                 scooter_data = db.scooter.find({"docking_station":request.form['station_name']})
-                db.details.update({"name":session['username']},{"$set":{"from":request.form['station_name']}})
+                db.details.update({"name":session['username']},{"$set":{"from":request.form['station_name'],"status":"riding"}})
                 return render_template("start_ride.html",username = username,scooter_data = scooter_data)
             else: 
                 return render_template("start_ride.html")
@@ -169,7 +173,7 @@ def end_ride():
     
 @app.route('/bill',methods = ['POST','GET'])
 def bill():
-    try:
+    # try:
         if 'username' in session and session['username'] != manager_name:
           if request.method == 'POST':
             a = datetime.datetime.now(pytz.timezone('Asia/Calcutta'))
@@ -194,22 +198,26 @@ def bill():
             #calculaitng ride timming
             hour = after_hour - before_hour -1
             minutes = after_min + (60 - before_min) + (hour*60)
-            quo = int(minutes/30)
-            rem = minutes%30
-            if rem == 0:
-                amount = quo*50
-            else:
-                amount = (quo + 1 )*50
+            # quo = int(minutes/30)
+            # rem = minutes%30
+            # if rem == 0:
+            #     amount = quo*50
+            # else:
+            #     amount = (quo + 1 )*50
+            amount = 20 + (minutes * 3)
+            print(minutes)
+            print(amount)
             details = {"name":session['username'],"registration_number":data[0]["registration_number"],"from":data[0]["from"],"start_time":data[0]["start_time"],"destination":data[0]["destination"],"end_time":data[0]["end_time"],"amount":amount,"duration":minutes}
             db.logs.insert(details)
+            db.details.update({"name":session['username']},{"$set":{"status":"-"}})
             # db.details.update({"name":session['username']},{"$set":{"from":"-","destination":"-","registration_number":"-","start_time":"-","end_time":"-"}})
             return render_template("bill.html",time = end_time,data = data,minutes = minutes,amount = amount,username = session['username'])
           else:
               return render_template("bill.html")
         else:
             return "You are not logged in <br><a href = '/login'></b>" + "click here to log in</b></a>"
-    except:
-        return redirect('/end_ride')
+    # except:
+    #     return redirect('/end_ride')
 
 @app.route('/add_station',methods = ['POST','GET'])
 def add_station():
@@ -282,6 +290,20 @@ def accout_settings():
             return "You are not logged in <br><a href = '/login'></b>" + "click here to log in</b></a>"
     except:
         return redirect('/home')
+
+@app.route('/top_up',methods = ['POST','GET'])
+def top_up():
+    try:
+        if 'username' in session and session['username'] != manager_name:
+                if request.method == 'POST':
+                    amt = request.form['Amount']
+                    x = db.details.find({"name":session['username']})
+                    a = x[0]["balance"]
+                    amount = a + amt
+                    db.details.update({"name":session['username']},{"$set":{"balance":amount}})
+                    return redirect('/home')
+    except:
+        return "You are not logged in <br><a href = '/login'></b>" + "click here to log in</b></a>"
 
 @app.route('/logout')
 def logout():
