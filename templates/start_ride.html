@@ -10,6 +10,7 @@
             <div class="block">
                 <p><i class="icons f7-icons">person_crop_circle </i>&NonBreakingSpace;<a href="/home" class = "external">Home</a></p>
                 <p><i class="fa fa-bicycle" style="font-size:28px;"></i>&NonBreakingSpace;<a href="/rides" class = "external">Rides</a></p>
+                <p><i class="icons f7-icons">creditcard_fill</i>&NonBreakingSpace;<a href="" class = "open-prompt2">Top Up</a></p>
                 <p><i class="icons f7-icons">calendar_badge_plus </i>&NonBreakingSpace;<a href="#" class = "external">Payments</a></p>
                 <p><i class="icons f7-icons">wrench_fill </i>&NonBreakingSpace;<a href="/account_settings" class = "external">Account Settings</a></p>
                 <p><i class="icons f7-icons">square_arrow_right </i>&NonBreakingSpace;<a href="/logout" class = "external">Logout</a></p>
@@ -33,10 +34,16 @@
                         <div class="right">
                           <!-- <p><a class="button panel-open" href="#" data-panel=".panel-right-2"><i class="icons f7-icons">menu</i></a></p> -->
                           <button class="col button open-alert"><i class="icons f7-icons">info </i> </button>
+                          &#x20B9;{{ amount }}/-
                         </div>
               </div>
             </div>
             <div class="page-content">
+              {% if error %}
+                <script type = "text/javascript">
+                    alert("{{ error }}");
+                </script>
+              {% endif %}
                 <div class = "block text-align-center">
                     <!-- <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d15594.062518588431!2d76.64893305!3d12.281023200000002!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!4m3!3e6!4m0!4m0!5e0!3m2!1sen!2sin!4v1573389283634!5m2!1sen!2sin" width="700" height="350" frameborder="0" style="border:0;" allowfullscreen=""></iframe> -->
                     <img src="static/images/logo.png" height="200px" width="200px" >
@@ -62,7 +69,7 @@
                                 </div>
                                 <div class="list color-theme-yellow ">
                                         <ul>
-                                          <li><button class="col button button-raised button-fill" ><span style="font-size: 15px;color:black;"><i class="icons f7-icons">play_fill</i>Start Ride</span></button></li>
+                                          <li><button class="col button button-raised button-fill" ><span style="font-size: 15px;color:black;"><i class="icons f7-icons padding-right">play_fill</i>Start Ride</span></button></li>
                                         </ul>
                                 </div>
                               </form>
@@ -80,6 +87,34 @@
   
   
   var $$ = Dom7;
+
+  // Alert
+$$('.open-alert').on('click', function () {
+  app.dialog.alert('Ride Fare:<br>Base price : &#x20B9;20<br>per minute : &#x20B9;3<br>Minimum Balance : &#x20B9;100');
+});
+
+//Top Up
+$$('.open-prompt2').on('click', function () {
+    app.dialog.prompt('Enter Amount to be added', function (Amount) {
+      app.dialog.confirm('Are you sure that Amount is ' + Amount + '?', function () {
+        var xhttp = new XMLHttpRequest();
+        xhttp.onreadystatechange = function() {
+          if (this.readyState == 4 && this.status == 200) {
+            Amount = this.responseText;
+          }
+        };
+        xhttp.open("POST", "/top_up", true);
+        xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+        xhttp.send("Amount="+Amount);
+        setTimeout(wait,1000);
+      });
+    });
+  });
+
+function wait()
+{
+  window.location.href = '/home';
+}
   
   $$('.open-alert').on('click', function () {
   app.dialog.alert('Ride Fare:<br>Base price : &#x20B9;20<br>per minute : &#x20B9;3');

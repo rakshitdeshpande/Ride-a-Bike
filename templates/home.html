@@ -78,9 +78,10 @@ var $$ = Dom7;
 
 // Alert
 $$('.open-alert').on('click', function () {
-  app.dialog.alert('Ride Fare:<br>Base price : &#x20B9;20<br>per minute : &#x20B9;3');
+  app.dialog.alert('Ride Fare:<br>Base price : &#x20B9;20<br>per minute : &#x20B9;3<br>Minimum Balance : &#x20B9;100');
 });
 
+//Top Up
 $$('.open-prompt2').on('click', function () {
     app.dialog.prompt('Enter Amount to be added', function (Amount) {
       app.dialog.confirm('Are you sure that Amount is ' + Amount + '?', function () {
@@ -93,11 +94,15 @@ $$('.open-prompt2').on('click', function () {
         xhttp.open("POST", "/top_up", true);
         xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
         xhttp.send("Amount="+Amount);
-        app.dialog.alert("Top Up successfully Done!");
-        window.location.href = '/home';
+        setTimeout(wait,1000);
       });
     });
   });
+
+function wait()
+{
+  window.location.href = '/home';
+}
 
 // Dom Events
 $$('.panel-left').on('panel:open', function () {

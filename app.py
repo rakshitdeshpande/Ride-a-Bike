@@ -102,7 +102,9 @@ def add_scooter():
         if 'username' in session and session['username'] == manager_name:
             if request.method == 'GET' :
                 docking_station_details = db.docking_station.find({})
-                return render_template("add_scooter.html",docking_station_details = docking_station_details)
+                x = db.details.find({"name":session['username']})
+                amount = x[0]["balance"]
+                return render_template("add_scooter.html",docking_station_details = docking_station_details,amount = amount)
             else:
                 data = {"registration_number":request.form['registration_number'],"insurance_number":request.form['insurance_number'],"insurance_valid_till":request.form['insurance_valid_till'],"docking_station":request.form["docking_station"],"ignition_status":"off","rider_name":"-"}
                 x = db.scooter.find({"registration_number":request.form['registration_number']})
@@ -111,12 +113,16 @@ def add_scooter():
                 try :
                     if x[0] :
                         error = "A vehicle with registration number already exists!"
-                    return render_template("add_scooter.html",error = error,docking_station_details = docking_station_details)
+                        x = db.details.find({"name":session['username']})
+                        amount = x[0]["balance"]
+                    return render_template("add_scooter.html",error = error,docking_station_details = docking_station_details,amount = amount)
                 except:
                     try:
                         if y[0] :
                             error = "Insurance Number is of different vehicle"
-                            return render_template("add_scooter.html",error = error,docking_station_details = docking_station_details)
+                            x = db.details.find({"name":session['username']})
+                            amount = x[0]["balance"]
+                            return render_template("add_scooter.html",error = error,docking_station_details = docking_station_details,amount = amount)
                     except:
                         db.scooter.insert(data)
                         x = db.docking_station.find({"station_name":request.form['docking_station']})
@@ -133,13 +139,17 @@ def add_scooter():
 def start_ride():
     try:
         if 'username' in session and session['username'] != manager_name:
-            if request.method == 'POST':
+            if request.method == 'POST': 
                 username = session['username']
                 scooter_data = db.scooter.find({"docking_station":request.form['station_name']})
                 db.details.update({"name":session['username']},{"$set":{"from":request.form['station_name'],"status":"riding"}})
-                return render_template("start_ride.html",username = username,scooter_data = scooter_data)
-            else: 
-                return render_template("start_ride.html")
+                x = db.details.find({"name":session['username']})
+                amount = x[0]["balance"]
+                return render_template("start_ride.html",username = username,scooter_data = scooter_data,amount = amount)
+            else:
+                x = db.details.find({"name":session['username']})
+                amount = x[0]["balance"] 
+                return render_template("start_ride.html",amount = amount,username = session['username'])
         else:
             return "You are not logged in <br><a href = '/login'></b>" + "click here to log in</b></a>"
     except:
@@ -150,6 +160,11 @@ def end_ride():
     try:
         if 'username' in session and session['username'] != manager_name:
             if request.method == 'POST':
+                bal = db.details.find({"name":session['username']})
+                balance = bal[0]["balance"]
+                if balance < 100:
+                    error = "No sufficcient balance, please Top Up your wallet"
+                    return render_template("start_ride.html",balance = balance,username = session['username'],error = error)
                 username = session['username']
                 docking_station_data = db.docking_station.find({})
                 a = datetime.datetime.now(pytz.timezone('Asia/Calcutta'))
@@ -206,10 +221,13 @@ def bill():
             # else:
             #     amount = (quo + 1 )*50
             amount = 20 + (minutes * 3)
+            balance = data[0]["balance"]
+            balance = balance - amount
+            db.details.update({"name":session['username']},{"$set":{"balance":balance}})
             details = {"name":session['username'],"registration_number":data[0]["registration_number"],"from":data[0]["from"],"start_time":data[0]["start_time"],"destination":data[0]["destination"],"end_time":data[0]["end_time"],"amount":amount,"duration":minutes}
             db.logs.insert(details)
             db.details.update({"name":session['username']},{"$set":{"status":"-"}})
-            return render_template("bill.html",time = end_time,data = data,minutes = minutes,amount = amount,username = session['username'])
+            return render_template("bill.html",time = end_time,data = data,minutes = minutes,amount = amount,username = session['username'],balance = balance)
           else:
               return render_template("bill.html")
         else:
@@ -259,7 +277,9 @@ def rides():
     try :
         if 'username' in session and session['username'] != manager_name:
             data = db.logs.find({"name":session['username']}).sort([("start_time",pymongo.DESCENDING)])
-            return render_template("rides.html", data = data ,username = session['username'])
+            x =  db.details.find({"name":session['username']})
+            amount = x[0]["balance"]
+            return render_template("rides.html", data = data ,username = session['username'],amount = amount)
         else:
             return "You are not logged in <br><a href = '/login'></b>" + "click here to log in</b></a>"
     except:
@@ -283,7 +303,9 @@ def accout_settings():
                     db.details.update({"name":session['username']},{"$set":{"password":pass_encrypt}})
                 return redirect('/home')
             else:
-                return render_template("update.html", username = session['username'])
+                x = db.details.find({"name":session['username']})
+                amount = x[0]["balance"]
+                return render_template("update.html", username = session['username'],amount = amount)
         else:
             return "You are not logged in <br><a href = '/login'></b>" + "click here to log in</b></a>"
     except:
@@ -297,7 +319,7 @@ def top_up():
                     amt = request.form['Amount']
                     x = db.details.find({"name":session['username']})
                     a = x[0]["balance"]
-                    amount = a + amt
+                    amount = int(a) + int(amt)
                     db.details.update({"name":session['username']},{"$set":{"balance":amount}})
                     return redirect('/home')
     except:
