@@ -173,7 +173,7 @@ def end_ride():
     
 @app.route('/bill',methods = ['POST','GET'])
 def bill():
-    # try:
+    try:
         if 'username' in session and session['username'] != manager_name:
           if request.method == 'POST':
             a = datetime.datetime.now(pytz.timezone('Asia/Calcutta'))
@@ -198,6 +198,7 @@ def bill():
             #calculaitng ride timming
             hour = after_hour - before_hour -1
             minutes = after_min + (60 - before_min) + (hour*60)
+            #caluclation fare on half an hour basis
             # quo = int(minutes/30)
             # rem = minutes%30
             # if rem == 0:
@@ -205,19 +206,16 @@ def bill():
             # else:
             #     amount = (quo + 1 )*50
             amount = 20 + (minutes * 3)
-            print(minutes)
-            print(amount)
             details = {"name":session['username'],"registration_number":data[0]["registration_number"],"from":data[0]["from"],"start_time":data[0]["start_time"],"destination":data[0]["destination"],"end_time":data[0]["end_time"],"amount":amount,"duration":minutes}
             db.logs.insert(details)
             db.details.update({"name":session['username']},{"$set":{"status":"-"}})
-            # db.details.update({"name":session['username']},{"$set":{"from":"-","destination":"-","registration_number":"-","start_time":"-","end_time":"-"}})
             return render_template("bill.html",time = end_time,data = data,minutes = minutes,amount = amount,username = session['username'])
           else:
               return render_template("bill.html")
         else:
             return "You are not logged in <br><a href = '/login'></b>" + "click here to log in</b></a>"
-    # except:
-    #     return redirect('/end_ride')
+    except:
+        return redirect('/end_ride')
 
 @app.route('/add_station',methods = ['POST','GET'])
 def add_station():
