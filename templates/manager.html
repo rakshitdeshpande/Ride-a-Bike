@@ -2,7 +2,7 @@
 {% block title %}Manager{% endblock %}
 
 {% block body_content %}
-<div class="panel panel-right panel-right-2 panel-cover panel-init theme-dark">
+<!-- <div class="panel panel-right panel-right-2 panel-cover panel-init theme-dark">
   <div class="page">
     <div class="block">
       <h2><span style="font-family:pacifico">Ride-a-Bike</span></h2>
@@ -26,7 +26,7 @@
       </div>
     </div>
   </div>
-</div>
+</div> -->
 <div class="view view-main ">
         <div class="page-content">
                 <div class="navbar">
@@ -37,15 +37,37 @@
                                     <img src="static/images/logo.png" height="50px" width = "50px" >
                                 </div>
                             </div>
-                            <div class="title">Manager</div>
+                            <div class="title"><h3><span style="font-family:pacifico">Ride-a-Bike</span></h3></div>
                             <div class="right">
-                                <p><a class="button panel-open" href="#" data-panel=".panel-right-2"><i class="icons f7-icons">ellipsis_vertical</i></a></p>
+                                <!-- <p><a class="button panel-open" href="#" data-panel=".panel-right-2"><i class="icons f7-icons">ellipsis_vertical</i></a></p> -->
+                                <a href="/logout" class="external padding"><i class="icons f7-icons">square_arrow_right </i></a>
                             </div>
                         </div>
                 </div>
-                <div class = "block">
-                  <h2 align="center" class = "text-color-blue">Active Rides</h2>
-                </div>
+                  <div class="float-right">
+                    <div class="menu">
+                     <div class="menu-inner">
+                      <div class="menu-item menu-item-dropdown">
+                          <div class="menu-item-content text-color-blue"><i class="icons f7-icons">ellipsis_vertical</i></div>
+                          <div class="menu-dropdown menu-dropdown-right">
+                            <div class="menu-dropdown-content">
+                                <div class="block">
+                                    <div class="block color-theme-blue">
+                                        <h3 class="row"><a  href="/add_scooter" class = " link external menu-dropdown-link menu-close "> Add Scooter</a></h3>
+                                        <h3 class = "row"><a href="#" class = "external open-prompt1 menu-dropdown-link menu-close">Remove Scooter</a></h3>
+                                        <h3 class="row"><a class = "link open-prompt2 menu-dropdown-link menu-close">Add Docking Station</a></h3>
+                                        <h3 class="row"><a href="#" class = "external open-prompt3 menu-dropdown-link menu-close">Remove Docking Station</a></h3>
+                                    </div>
+                                  </div>
+                            </div>
+                          </div>
+                        </div>
+                        </div>
+                      </div>
+                  </div>
+                <!-- <div class = "block"> -->
+                      <h2 class = "text-color-blue text-align-left padding-left">Active Rides</h2>
+                <!-- </div> -->
                     <div class="data-table card">
                       {% if data %}
                         <table>
@@ -71,7 +93,7 @@
                         {% endif %}
                       </div>
                       <div class = "block">
-                          <h2 align="center" class = "text-color-blue">Logs</h2>
+                          <h2 align="left" class = "text-color-blue">Logs</h2>
                       </div>
                       <div class="data-table card">
                           {% if logs %}
@@ -160,33 +182,33 @@ $$('.open-prompt3').on('click', function () {
     });
   });
   
-  // Dom Events
-  $$('.panel-left').on('panel:open', function () {
-    console.log('Panel left: open');
-  });
-  $$('.panel-left').on('panel:opened', function () {
-    console.log('Panel left: opened');
-  });
+  // // Dom Events
+  // $$('.panel-left').on('panel:open', function () {
+  //   console.log('Panel left: open');
+  // });
+  // $$('.panel-left').on('panel:opened', function () {
+  //   console.log('Panel left: opened');
+  // });
   
-  // Instance Events
-  var panelRight = app.panel.get('.panel-right-1');
-  panelRight.on('open', function () {
-    console.log('Panel right: open');
-  });
-  panelRight.on('opened', function () {
-    console.log('Panel right: opened');
-  });
+  // // Instance Events
+  // var panelRight = app.panel.get('.panel-right-1');
+  // panelRight.on('open', function () {
+  //   console.log('Panel right: open');
+  // });
+  // panelRight.on('opened', function () {
+  //   console.log('Panel right: opened');
+  // });
   
-  // App Events
-  app.on('panelClose', function (panel) {
-    console.log('Panel ' + panel.side + ': close');
-  });
-  app.on('panelClosed', function (panel) {
-    console.log('Panel ' + panel.side + ': closed');
-  });
-  app.on('panelResize', function (panel, newPanelWidth) {
-    console.log('Panel resized to ' + newPanelWidth + 'px');
-  });
+  // // App Events
+  // app.on('panelClose', function (panel) {
+  //   console.log('Panel ' + panel.side + ': close');
+  // });
+  // app.on('panelClosed', function (panel) {
+  //   console.log('Panel ' + panel.side + ': closed');
+  // });
+  // app.on('panelResize', function (panel, newPanelWidth) {
+  //   console.log('Panel resized to ' + newPanelWidth + 'px');
+  // });
 
 </script>
 {% endblock %}

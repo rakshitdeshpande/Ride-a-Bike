@@ -303,9 +303,7 @@ def accout_settings():
                     db.details.update({"name":session['username']},{"$set":{"password":pass_encrypt}})
                 return redirect('/home')
             else:
-                x = db.details.find({"name":session['username']})
-                amount = x[0]["balance"]
-                return render_template("update.html", username = session['username'],amount = amount)
+                return render_template("update.html", username = session['username'])
         else:
             return "You are not logged in <br><a href = '/login'></b>" + "click here to log in</b></a>"
     except:
