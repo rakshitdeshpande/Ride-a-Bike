@@ -1,0 +1,94 @@
+{% extends 'base.html' %}
+{% block title %}Verify{% endblock %}
+
+{% block body_content %}
+<div class="view view-main ">
+        <div class="page-content">
+                <div class="navbar">
+                    <div class="navbar-bg"></div>
+                        <div class="navbar-inner">
+                            <div class="left">
+                                <div class= "block">
+                                    <img src="static/images/logo.png" height="50px" width = "50px" >
+                                </div>
+                            </div>
+                            <div class="title"><h3><span style="font-family:pacifico">Ride-a-Bike</span></h3></div>
+                            <div class="right">
+                            </div>
+                        </div>
+                </div>
+                <div class="block text-align-center">
+                    <p align="center">
+                      <img src="static/images/logo.png" height="150px" width="150px" >
+                    </p>
+                  </div>
+                <div class="login-screen-content">
+                    <!-- <div class="login-screen-title">My App</div> -->
+                        <form action = "/verify_code" method = 'POST' id = "form">
+                            <div class="list">
+                              <ul>
+                                <li class="item-content item-input">
+                                  <div class="item-inner">
+                                    <div class="item-title item-label"><span style="font-size: 20px">OTP</span></div>
+                                    <div class="item-input">
+                                      <input type="tel" name="code" placeholder="Enter OTP" requied validate/>
+                                    </div>
+                                  </div>
+                                </li>
+                              </ul>
+                            </div>
+                            <div class="list">
+                              <ul>
+                                <li><button class="button col button-round" ><span style="font-size: 15px">Verify</span></button></li>
+                              </ul>
+                            </div>
+                          </form>
+                        </div>
+        </div>
+</div>
+
+{% endblock %}
+
+{% block scripts %}
+
+<script type = "text/javascript">
+
+var $$ = Dom7;
+
+$$('.open-prompt1').on('click', function () {
+    app.dialog.prompt('Vehicle Number', function (num) {
+      app.dialog.confirm('Are you sure that Vehicle Number is ' + num + '?', function () {
+        //app.dialog.alert('Ok, your name is ' + name);
+      });
+    });
+  });
+
+$$('.open-prompt2').on('click', function () {
+    app.dialog.prompt('Docking Station Name', function (name) {
+      app.dialog.confirm('Are you sure that your Docking Station Name is ' + name + '?', function () {
+        var xhttp = new XMLHttpRequest();
+        xhttp.onreadystatechange = function() {
+          if (this.readyState == 4 && this.status == 200) {
+            name = this.responseText;
+          }
+        };
+        xhttp.open("POST", "/add_station", true);
+        xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+        xhttp.send("station_name="+name);
+        app.dialog.alert("Docking Station successfully added!");
+        window.location.href = '/manager';
+      });
+    });
+  });
+
+$$('.open-prompt3').on('click', function () {
+    app.dialog.prompt('Docking Station Name', function (name) {
+      app.dialog.confirm('Are you sure that your Docking Station Name is ' + name + '?', function () {
+        //app.dialog.alert('Ok, your name is ' + name);
+      });
+    });
+  });
+  
+
+</script>
+{% endblock %}

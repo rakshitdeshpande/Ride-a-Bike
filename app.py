@@ -2,7 +2,7 @@
         Ride-a-Bike
         Developer : Rakshit Deshpande
 '''
-import pymongo,datetime,hashlib,math,pytz
+import pymongo,datetime,hashlib,math,pytz,random
 from flask import Flask, render_template, url_for, redirect, request ,flash ,session
 from pymongo import MongoClient
 from flask_mail import Mail,Message
@@ -22,6 +22,14 @@ mail_id = os.environ['MAIL_ID']
 
 client = pymongo.MongoClient("mongodb+srv://"+db_username+":"+db_password+"@cluster0-2ogac.mongodb.net/test?retryWrites=true&w=majority")
 db = client["ride-a-bike"]
+
+app.config['MAIL_SERVER']='smtp.gmail.com'
+app.config['MAIL_PORT'] = 465
+app.config['MAIL_USERNAME'] = mail_id
+app.config['MAIL_PASSWORD'] = id
+app.config['MAIL_USE_TLS'] = False
+app.config['MAIL_USE_SSL'] = True
+mail = Mail(app)
 
 @app.route('/')
 def index():
@@ -322,6 +330,51 @@ def top_up():
                     return redirect('/home')
     except:
         return "You are not logged in <br><a href = '/login'></b>" + "click here to log in</b></a>"
+
+@app.route('/forgot_pass',methods = ['POST','GET'])
+def forgot_pass():
+    if request.method == 'GET':
+        return redirect('/home')
+    else:
+        Name = request.form['name']
+        print(Name)
+        file = open("name",'w')
+        file.write(Name)
+        file.close()
+        return render_template("verify.html")
+
+@app.route('/verify_code',methods = ['POST','GET'])
+def verify_code():
+    if request.method == 'GET':
+        try :
+            global code
+            code = random.randrange(100000,999999)
+            file = open("name","r")
+            name = file.read()
+            x = db.details.find({"name":name})
+            email = x[0]["email"]
+            msg = Message('OTP', sender = mail_id, recipients = [email])
+            msg.body = "Yours OTP is "+str(code)+" please do not share this OTP with someone"
+            mail.send(msg)
+            print("Send mail ",code," to ",x[0]["email"])
+            return render_template("verify.html")
+        except:
+            error = "Invalid username"
+            return render_template("login.html",error = error)
+    else:
+        Code = request.form['code']
+        if code == int(Code):
+            file = open("name","r")
+            name = file.read()
+            session['username'] = name
+            print(name)
+            message = "Update your password"
+            return render_template('update.html',message = message,username = session['username'])
+        else:
+            error = "Incorrect OTP!!"
+            return render_template("login.html",error = error)
+        
+
 
 @app.route('/logout')
 def logout():

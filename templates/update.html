@@ -36,6 +36,13 @@
         </div>
       </div>
         <div class="page-content">
+                    {% if message %}
+                        <script src="{{ url_for('static', filename='js/framework7.bundle.min.js') }}"></script>
+                        <script src="{{ url_for('static', filename='js/f7_setup.js') }}"></script>
+                        <script type = "text/javascript">
+                              app.dialog.alert("{{ message }}");
+                        </script>
+                    {% endif %}
                     <div class="block text-align-center">
                       <p align="center">
                         <img src="static/images/logo.png" height="150px" width="150px">

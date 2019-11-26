@@ -18,6 +18,13 @@
                         <img src="static/images/logo.png" height="150px" width="150px" >
                       </p>
                     </div>
+                    {% if error %}
+                        <script src="{{ url_for('static', filename='js/framework7.bundle.min.js') }}"></script>
+                        <script src="{{ url_for('static', filename='js/f7_setup.js') }}"></script>
+                        <script type = "text/javascript">
+                          app.dialog.alert("{{ error }}");
+                         </script>
+                    {% endif %}
                     <div class="login-screen-content">
                         <!-- <div class="login-screen-title">My App</div> -->
                             <form action = "login" method = 'POST' id = "form">
@@ -47,6 +54,12 @@
                                   </ul>
                                 </div>
                               </form>
+                              <!-- <p class="text-align-center"><a class="link external" href = "/forgot_pass">Forgot Password</a></p> -->
+                              <div class="list">
+                                  <ul>
+                                    <li class="text-align-center"><a class="link open-prompt" ><span style="font-size: 15px">Forgot Password</span></a></li>
+                                  </ul>
+                                </div>
                             </div>
                           </div>
 
@@ -64,5 +77,29 @@ $$('.open-alert').on('click', function () {
   app.dialog.alert('Hello');
 });
 
+var $$ = Dom7;
+
+$$('.open-prompt').on('click', function () {
+    app.dialog.prompt('Enter your username', function (name) {
+      // app.dialog.confirm('Are you sure that your Docking Station Name is ' + name + '?', function () {
+        var xhttp = new XMLHttpRequest();
+        xhttp.onreadystatechange = function() {
+          if (this.readyState == 4 && this.status == 200) {
+            name = this.responseText;
+          }
+        };
+        xhttp.open("POST", "/forgot_pass", true);
+        xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+        xhttp.send("name="+name);
+        app.dialog.alert("OTP has been sent to your mail");
+        setTimeout(wait,2000);
+        // window.location.href = '/verify_code';
+      // });
+    });
+  });
+function wait()
+{
+  window.location.href = '/verify_code';
+}
 </script>
 {% endblock %}
