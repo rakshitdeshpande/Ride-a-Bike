@@ -73,7 +73,8 @@ def login():
                 else:
                     return redirect('/login')
         except:
-            return redirect('/login') 
+            error = "Invalid User Credentials"
+            return render_template("login.html",error = error) 
 
 @app.route('/home',methods = ['POST','GET'])
 def home():
