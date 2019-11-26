@@ -1,7 +1,7 @@
 {% extends 'base.html' %}
-{% block title %}Home{% endblock %}
+{% block title %}Rides{% endblock %}
 
-{% block body_content %}        
+{% block body_content %}
         <div class="view view-main view-init">
             <div class="panel panel-left panel-right-2 panel-cover panel-init theme-dark">
                 <div class="page">
@@ -10,7 +10,7 @@
                     </div>
                   <div class="block">
                       <p><i class="icons f7-icons">person_crop_circle </i>&NonBreakingSpace;<a href="/home" class = "external">Home</a></p>
-                      <p><i class="fa fa-bicycle" style="font-size:28px;"></i>&NonBreakingSpace;<a href="/rides" class = "external">Rides</a></p>
+                      <p> <i class="fa fa-bicycle" style="font-size:28px;"></i>&NonBreakingSpace;<a href="/rides" class = "external">Rides</a></p>
                       <p><i class="icons f7-icons">creditcard_fill</i>&NonBreakingSpace;<a href="" class = "open-prompt2">Top Up</a></p>
                       <p><i class="icons f7-icons">info</i>&NonBreakingSpace;<a href="" class = "open-alert">Fare</a></p>
                       <p><i class="icons f7-icons">calendar_badge_plus </i>&NonBreakingSpace;<a href="/payments" class = "external">Payments</a></p>
@@ -20,7 +20,7 @@
                   </div>
                 </div>
               </div>
-          <div class="page-content">
+          <div class="page">
             <div class="navbar">
               <div class="navbar-bg"></div>
               <div class="navbar-inner">
@@ -30,38 +30,28 @@
                                 <img src="static/images/logo.png" height="50px" width = "50px" >
                             </div> -->
                         </div>
-                        <div class="title">Ride-a-Bike</div>
-                        <div class="right padding">
-                                <!-- <p><a class="button panel-open" href="#" data-panel=".panel-right-2"><i class="icons f7-icons">menu</i></a></p> -->
-                                &#x20B9;{{ amount }}/-
+                        <div class="title">Payments</div>
+                        <div class = "right padding">
+                            &#x20B9;{{ amount }}/-
                         </div>
               </div>
             </div>
             <div class="page-content">
-                <div class="block text-align-center">
-                    <!-- <p align="center">
+                <!-- <div class="block text-align-center">
+                    <p align="center">
                       <img src="static/images/logo.png" >
-                    </p> -->
-                </div>
-                <div class="block block-strong color-theme-green">
-                  {% for i in docking_station_details %}
-                  <div class = "block">
-                    <div class="card">
-                      <div class="card-header">
-                        <h4> {{ i["station_name"] }}</h4>
-                        <div class = "right">
-                            <form action="/start_ride" method = 'POST'>
-                              <input type = "hidden" name = "station_name" value = "{{ i["station_name"] }}" />
-                              <button class="col button button-outline button-raised">Select</button>
-                            </form>
-                        </div>
-                      </div>
-                      <div class="card-content card-content-padding">
-                          <h4>Number of scooters : {{ i["no_of_scooters"] }}</h4>
-                      </div>
-                    </div>
-                  </div>
-                  {% endfor %}
+                    </p>
+                </div> -->
+                <div class="data-table card">
+                    <table>
+                        {% for i in data %}
+                        <tbody>
+                            <td class="label-cell">{{ i["time"] }}</td>
+                            <td class="label-cell">{{ i["amount"] }}</td>
+                            <td class="label-cell">{{ i["mode"] }}</td>     
+                        </tbody>
+                        {% endfor %}
+                    </table>
                 </div>
             </div>
           </div>
@@ -103,6 +93,7 @@ function wait()
 {
   window.location.href = '/home';
 }
+
 
 // Dom Events
 $$('.panel-left').on('panel:open', function () {

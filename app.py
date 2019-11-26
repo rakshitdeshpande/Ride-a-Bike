@@ -328,6 +328,10 @@ def top_up():
                     a = x[0]["balance"]
                     amount = int(a) + int(amt)
                     db.details.update({"name":session['username']},{"$set":{"balance":amount}})
+                    a = datetime.datetime.now(pytz.timezone('Asia/Calcutta'))
+                    time = a.strftime("%c")
+                    data = {"name":session['username'],"time":time,"amount":int(amt),"mode":"debited"}
+                    db.payments.insert(data)
                     return redirect('/home')
     except:
         return "You are not logged in <br><a href = '/login'></b>" + "click here to log in</b></a>"
@@ -375,7 +379,16 @@ def verify_code():
             error = "Incorrect OTP!!"
             return render_template("login.html",error = error)
         
-
+@app.route('/payments')
+def payments():
+    try:
+        if 'username' in session and session['username'] != manager_name:
+            data = db.payments.find({"name":session['username']}).sort([("time",pymongo.DESCENDING)])
+            a = db.details.find({"name":session['username']})
+            amount = a[0]["balance"]
+            return render_template("payments.html",data = data,username = session['username'],amount = amount) 
+    except:
+        return "You are not logged in <br><a href = '/login'></b>" + "click here to log in</b></a>"
 
 @app.route('/logout')
 def logout():
