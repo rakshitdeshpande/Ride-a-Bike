@@ -6,6 +6,8 @@ import pymongo,datetime,hashlib,math,pytz,random
 from flask import Flask, render_template, url_for, redirect, request ,flash ,session
 from pymongo import MongoClient
 from flask_mail import Mail,Message
+from fpdf import FPDF
+from flask import send_file
 import os
 
 app = Flask(__name__)
@@ -197,7 +199,7 @@ def end_ride():
     
 @app.route('/bill',methods = ['POST','GET'])
 def bill():
-    try:
+    # try:
         if 'username' in session and session['username'] != manager_name:
           if request.method == 'POST':
             a = datetime.datetime.now(pytz.timezone('Asia/Calcutta'))
@@ -211,14 +213,29 @@ def bill():
             data = db.details.find({"name":session['username']})
             start_time = data[0]["start_time"]
             a = start_time.split(" ")
-            time = a[3].split(":")
-            before_hour = int(time[0])
-            before_min = int(time[1])
-            
+            # time = a[3].split(":")
+            global time
+            global before_hour
+            global before_min
+            try :
+                time = a[3].split(":")
+                before_hour = int(time[0]) 
+                before_min = int(time[1])
+            except:
+                time = a[4].split(":") 
+                before_hour = int(time[0])
+                before_min = int(time[1])
             a = end_time.split(" ")
-            time = a[3].split(":")
-            after_hour = int(time[0])
-            after_min = int(time[1])
+            global after_hour
+            global after_min
+            try :
+                time = a[3].split(":")
+                after_hour = int(time[0])
+                after_min = int(time[1])
+            except:
+                time = a[4].split(":")
+                after_hour = int(time[0])
+                after_min = int(time[1])
             #calculaitng ride timming
             hour = after_hour - before_hour -1
             minutes = after_min + (60 - before_min) + (hour*60)
@@ -235,14 +252,43 @@ def bill():
             db.details.update({"name":session['username']},{"$set":{"balance":balance}})
             details = {"name":session['username'],"registration_number":data[0]["registration_number"],"from":data[0]["from"],"start_time":data[0]["start_time"],"destination":data[0]["destination"],"end_time":data[0]["end_time"],"amount":amount,"duration":minutes}
             db.logs.insert(details)
+
+            #writing into pdf file
+            pdf = FPDF()
+            pdf.add_page()
+            pdf.set_font("times",'I', size=32)
+            pdf.cell(200, 10, txt="Ride-a-Bike", ln=1, align="C")
+            pdf.set_font("Arial", size=20)
+            pdf.set_line_width(1)
+            pdf.set_draw_color(255, 0, 0)
+            pdf.line(10, 25, 200, 25)
+            pdf.image('static/images/logo.png', x=85, y=30, w=50)
+            pdf.set_font("Arial",'B', size = 20)
+            pdf.cell(200,120,txt = "Name : "+session['username'] , ln = 1, align="L")
+            pdf.set_font("Arial", size = 18)
+            pdf.set_line_width(1)
+            pdf.set_draw_color(0, 0, 0)
+            pdf.line(15, 90, 195, 90)
+            start_station = data[0]["from"]
+            pdf.cell(200, -75, txt="From :  "+start_station+"    "+start_time , ln=1, align="L")
+            pdf.cell(200,100, txt="To :   "+request.form['destination']+"    "+end_time , ln=1, align="L")
+            pdf.cell(200,-75, txt = "Minimum Fare : 20" ,ln = 1, align="L")
+            pdf.cell(200,100, txt = "Time Fare ("+str(minutes)+" mins) : "+str((minutes * 3)) ,ln = 1, align="L")
+            pdf.set_font("Arial",'B', size = 20)
+            pdf.cell(200,-75, txt = "Total : "+str(amount) ,ln = 1, align="L")
+            pdf.set_line_width(1)
+            pdf.set_draw_color(0, 0, 0)
+            pdf.line(15, 165, 195, 165)
+            pdf.output("ride-a-bike_bill.pdf")
+
             db.details.update({"name":session['username']},{"$set":{"status":"-"}})
             return render_template("bill.html",time = end_time,data = data,minutes = minutes,amount = amount,username = session['username'],balance = balance)
           else:
               return render_template("bill.html")
         else:
             return "You are not logged in <br><a href = '/login'></b>" + "click here to log in</b></a>"
-    except:
-        return redirect('/end_ride')
+    # except:
+    #     return redirect('/end_ride')
 
 @app.route('/add_station',methods = ['POST','GET'])
 def add_station():
@@ -390,6 +436,12 @@ def payments():
     except:
         return "You are not logged in <br><a href = '/login'></b>" + "click here to log in</b></a>"
 
+@app.route('/download_bill')
+def download_bill():
+    if 'username' in session and session['username'] != manager_name:
+        return send_file("ride-a-bike_bill.pdf", as_attachment=True)
+    else:
+        return "You are not logged in <br><a href = '/login'></b>" + "click here to log in</b></a>"
 @app.route('/logout')
 def logout():
     session.pop('username',None)
