@@ -53,21 +53,21 @@
                 <div class="login-screen-content">
                         <!-- <div class="login-screen-title">My App</div> -->
                             <form action = "/end_ride" method = 'POST' id = "form">
-                                <div class="list color-theme-yellow">
-                                  <ul>
-                                    <li class="item-content item-input">
-                                      <div class="item-inner">
-                                        <div class="item-title item-label"><span style="font-size: 20px">Choose your vehicle</span></div>
-                                        <div class="item-input-wrap">
-                                          <select name = "registration_number">
-                                            {% for i in scooter_data %}
-                                                  <option value = {{ i["registration_number"] }}> {{  i["registration_number"] }}</option>
-                                            {% endfor %}
-                                          </select>
-                                        </div>
-                                      </div>
-                                    </li>
-                                  </ul>
+                                <div class="list color-theme-yellow ">
+                                    <ul>
+                                        <li class="item-content item-input">
+                                          <div class="item-inner">
+                                            <div class="item-title item-label"><span style="font-size: 20px">Choose your vehicle</span></div>
+                                            <div class="item-input-wrap">
+                                              <select name = "registration_number">
+                                                {% for i in scooter_data %}
+                                                      <option value = {{ i["registration_number"] }}> {{  i["registration_number"] }}</option>
+                                                {% endfor %}
+                                              </select>
+                                            </div>
+                                          </div>
+                                        </li>
+                                      </ul>
                                 </div>
                                 <div class="list color-theme-yellow ">
                                         <ul>
@@ -75,25 +75,7 @@
                                         </ul>
                                 </div>
                               </form>
-                              <!-- <li>
-                              <a class="item-link smart-select smart-select-init" data-open-in="popover">
-                                <select name="superhero" multiple>
-                                  <option value="Batman" selected>Batman</option>
-                                  <option value="Superman">Superman</option>
-                                  <option value="Hulk">Hulk</option>
-                                  <option value="Spiderman">Spiderman</option>
-                                  <option value="Ironman">Ironman</option>
-                                  <option value="Thor">Thor</option>
-                                  <option value="Wonder Woman">Wonder Woman</option>
-                                </select>
-                                <div class="item-content">
-                                  <div class="item-inner">
-                                    <div class="item-title">Super Hero</div>
-                                  </div>
-                                </div>
-                              </a>
-                            </li> -->
-                            </div>
+                 </div>
                 
             </div>
         </div>
@@ -163,7 +145,6 @@ function wait()
   app.on('panelResize', function (panel, newPanelWidth) {
     console.log('Panel resized to ' + newPanelWidth + 'px');
   });
-  
   
   </script>
   {% endblock %}

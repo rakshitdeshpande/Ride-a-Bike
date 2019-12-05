@@ -58,7 +58,7 @@ def login():
         return render_template("login.html")
     else:
         try:
-            # if request.form['name'] == "admin" and request.form['password'] == "admin":
+            # if request.form['name'] == admin_name and request.form['password'] == admin_pass:
             #     session['username'] = request.form['name']
             #     return "admin"
             if request.form['name'] == manager_name and request.form['password'] == manager_pass:
@@ -199,7 +199,7 @@ def end_ride():
     
 @app.route('/bill',methods = ['POST','GET'])
 def bill():
-    # try:
+    try:
         if 'username' in session and session['username'] != manager_name:
           if request.method == 'POST':
             a = datetime.datetime.now(pytz.timezone('Asia/Calcutta'))
@@ -213,7 +213,6 @@ def bill():
             data = db.details.find({"name":session['username']})
             start_time = data[0]["start_time"]
             a = start_time.split(" ")
-            # time = a[3].split(":")
             global time
             global before_hour
             global before_min
@@ -236,6 +235,7 @@ def bill():
                 time = a[4].split(":")
                 after_hour = int(time[0])
                 after_min = int(time[1])
+
             #calculaitng ride timming
             hour = after_hour - before_hour -1
             minutes = after_min + (60 - before_min) + (hour*60)
@@ -287,8 +287,8 @@ def bill():
               return render_template("bill.html")
         else:
             return "You are not logged in <br><a href = '/login'></b>" + "click here to log in</b></a>"
-    # except:
-    #     return redirect('/end_ride')
+    except:
+        return redirect('/end_ride')
 
 @app.route('/add_station',methods = ['POST','GET'])
 def add_station():
