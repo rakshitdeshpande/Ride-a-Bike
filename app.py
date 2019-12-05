@@ -490,12 +490,22 @@ def clear_logs():
   try:
     if 'username' in session and session['username'] == manager_name:
         db.logs.delete_many({})
-        return render_template("index.html")
+        return redirect('/manager')
     else:
-        "You are not logged in <br><a href = '/login'></b>" + "click here to log in</b></a>"
+        return "You are not logged in <br><a href = '/login'></b>" + "click here to log in</b></a>"
   except:
       return redirect("/")
-
+      
+@app.route('/clear_payments')
+def clear_payments():
+  try:
+    if 'username' in session and session['username'] == manager_name:
+        db.payments.delete_many({})
+        return redirect('/manager')
+    else:
+        return "You are not logged in <br><a href = '/login'></b>" + "click here to log in</b></a>"
+  except:
+      return redirect("/")
     
 if __name__ == '__main__':
     app.run(host="0.0.0.0",port=5000, threaded = True, debug = True)
