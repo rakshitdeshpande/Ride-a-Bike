@@ -71,6 +71,8 @@ def login():
                 x = db.details.find({"name":request.form['name']})
                 if x[0]["password"] == pass_encrypt :
                     session['username'] = request.form['name']
+                    if x[0]["status"] == "riding" :
+                        return redirect('/end_ride')
                     return redirect('/home')
                 else:
                     return redirect('/login')
@@ -171,6 +173,10 @@ def end_ride():
     try:
         if 'username' in session and session['username'] != manager_name:
             if request.method == 'POST':
+                x = db.details.find({"name":session['username']})
+                if x[0]["status"] == "-" :
+                    print("here1")
+                    return redirect('/home')
                 bal = db.details.find({"name":session['username']})
                 balance = bal[0]["balance"]
                 if balance < 100:
@@ -190,7 +196,13 @@ def end_ride():
                 db.docking_station.update({"station_name":station},{"$set":{"no_of_scooters":num}})
                 return render_template("end_ride.html",username = username,docking_station_data = docking_station_data)
             else:
-                return redirect('/end_ride')
+                x = db.details.find({"name":session['username']})
+                if x[0]["status"] == "-" :
+                    print("here2")
+                    return redirect('/home')
+                username = session['username']
+                docking_station_data = db.docking_station.find({})
+                return render_template("end_ride.html",username = username,docking_station_data = docking_station_data)
         else:
             return "You are not logged in <br><a href = '/login'></b>" + "click here to log in</b></a>"
     except:
