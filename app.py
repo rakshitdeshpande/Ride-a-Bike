@@ -94,7 +94,7 @@ def home():
           
           return redirect('/start_ride')
     else:
-        return "You are not logged in <br><a href = '/login'></b>" + "click here to log in</b></a>"
+        return render_template("login_error.html")
 
 @app.route('/manager')
 def manager():
@@ -103,7 +103,7 @@ def manager():
             data = db.details.find({"status":"riding"})
             logs = db.logs.find({}).sort([("start_time",pymongo.DESCENDING)])
             return render_template("manager.html", data = data, logs = logs)
-        return "You are not logged in <br><a href = '/login'></b>" + "click here to log in</b></a>"
+        return render_template("login_error.html")
     except:
         return redirect('/manager')
 
@@ -144,7 +144,7 @@ def add_scooter():
                         db.docking_station.update({"station_name":request.form['docking_station']},{"$set":{"no_of_scooters":num}})
                         return redirect('/manager')
         else:
-            return "You are not logged in <br><a href = '/login'></b>" + "click here to log in</b></a>"
+            return render_template("login_error.html")
     except:
         return render_template("add_scooter.html")
 
@@ -164,7 +164,7 @@ def start_ride():
                 amount = x[0]["balance"] 
                 return render_template("start_ride.html",amount = amount,username = session['username'])
         else:
-            return "You are not logged in <br><a href = '/login'></b>" + "click here to log in</b></a>"
+            return render_template("login_error.html")
     except:
         return redirect('/start_ride')
 
@@ -204,7 +204,7 @@ def end_ride():
                 docking_station_data = db.docking_station.find({})
                 return render_template("end_ride.html",username = username,docking_station_data = docking_station_data)
         else:
-            return "You are not logged in <br><a href = '/login'></b>" + "click here to log in</b></a>"
+            return render_template("login_error.html")
     except:
         return render_template("start_ride.html")
 
@@ -298,7 +298,7 @@ def bill():
           else:
               return render_template("bill.html")
         else:
-            return "You are not logged in <br><a href = '/login'></b>" + "click here to log in</b></a>"
+            return render_template("login_error.html")
     except:
         return redirect('/end_ride')
 
@@ -313,7 +313,7 @@ def add_station():
         else:
             return render_template("manager.html")
       else:
-          "You are not logged in <br><a href = '/login'></b>" + "click here to log in</b></a>"
+          render_template("login_error.html")
     except:
         return render_template("manager.html")
 
@@ -348,7 +348,7 @@ def rides():
             amount = x[0]["balance"]
             return render_template("rides.html", data = data ,username = session['username'],amount = amount)
         else:
-            return "You are not logged in <br><a href = '/login'></b>" + "click here to log in</b></a>"
+            return render_template("login_error.html")
     except:
         return redirect('/home')
 
@@ -372,7 +372,7 @@ def accout_settings():
             else:
                 return render_template("update.html", username = session['username'])
         else:
-            return "You are not logged in <br><a href = '/login'></b>" + "click here to log in</b></a>"
+            return render_template("login_error.html")
     except:
         return redirect('/home')
 
@@ -392,7 +392,7 @@ def top_up():
                     db.payments.insert(data)
                     return redirect('/home')
     except:
-        return "You are not logged in <br><a href = '/login'></b>" + "click here to log in</b></a>"
+        return render_template("login_error.html")
 
 @app.route('/forgot_pass',methods = ['POST','GET'])
 def forgot_pass():
@@ -446,14 +446,14 @@ def payments():
             amount = a[0]["balance"]
             return render_template("payments.html",data = data,username = session['username'],amount = amount) 
     except:
-        return "You are not logged in <br><a href = '/login'></b>" + "click here to log in</b></a>"
+        return render_template("login_error.html")
 
 @app.route('/download_bill')
 def download_bill():
     if 'username' in session and session['username'] != manager_name:
         return send_file("ride-a-bike_bill.pdf", as_attachment=True)
     else:
-        return "You are not logged in <br><a href = '/login'></b>" + "click here to log in</b></a>"
+        return render_template("login_error.html")
 @app.route('/logout')
 def logout():
     session.pop('username',None)
@@ -471,7 +471,7 @@ def delete_scooter():
         db.scooter.delete_many({})
         return render_template("index.html")
     else:
-        "You are not logged in <br><a href = '/login'></b>" + "click here to log in</b></a>"
+        render_template("login_error.html")
   except:
       return redirect("/")
 
@@ -482,7 +482,7 @@ def delete_station():
         db.docking_station.delete_many({})
         return render_template("index.html")
     else:
-        "You are not logged in <br><a href = '/login'></b>" + "click here to log in</b></a>"
+        render_template("login_error.html")
   except:
       return redirect("/")
 
@@ -493,7 +493,7 @@ def delete_details():
         db.details.delete_many({})
         return render_template("index.html")
     else:
-        "You are not logged in <br><a href = '/login'></b>" + "click here to log in</b></a>"
+        render_template("login_error.html")
   except:
       return redirect("/")
 
@@ -504,7 +504,7 @@ def clear_logs():
         db.logs.delete_many({})
         return redirect('/manager')
     else:
-        return "You are not logged in <br><a href = '/login'></b>" + "click here to log in</b></a>"
+        return render_template("login_error.html")
   except:
       return redirect("/")
       
@@ -515,7 +515,7 @@ def clear_payments():
         db.payments.delete_many({})
         return redirect('/manager')
     else:
-        return "You are not logged in <br><a href = '/login'></b>" + "click here to log in</b></a>"
+        return render_template("login_error.html")
   except:
       return redirect("/")
     

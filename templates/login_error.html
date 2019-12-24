@@ -1,0 +1,26 @@
+{% extends 'base.html' %}
+{% block title %}Not Logged in{% endblock %}
+
+{% block body_content %}
+<div class="view view-main">
+        <div class="page">
+                <div class="page-content">
+                  <div class="navbar">
+                    <div class="navbar-bg"></div>
+                    <div class="navbar-inner">
+                      <div class="left padding">
+                            <img src="static/images/logo.png" height="75px" width = "75px" >
+                      </div>
+                      <div class="title"><h2><span style="font-family:pacifico">Ride-a-Bike</span></h2></div>
+                      <div class="right"></div>
+                    </div>
+                  </div>
+                  <div class="block">
+                    <h2 class = "text-align-center">OOPS! your are not logged in </h2>
+                    <h2 class = "text-align-center"><a href = "/login" class = "external">click here to login</a></h2>
+                    
+                  </div>
+                </div>
+              </div>
+</div>
+{% endblock %}
