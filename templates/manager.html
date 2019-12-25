@@ -3,143 +3,139 @@
 
 {% block body_content %}
 <div class="view view-main ">
-  <!-- <div class="panel panel-right panel-right-2 panel-cover panel-init theme-dark">
-  <div class="page">
-    <div class="block">
-      <h2><span style="font-family:pacifico">Ride-a-Bike</span></h2>
+
+<div class="page">
+  <div class="navbar">
+    <div class="navbar-bg"></div>
+    <div class="navbar-inner">
+      <div class="left">
+        <div class= "block">
+            <img src="static/images/logo.png" height="75px" width = "75px" >
+        </div>
     </div>
-    <div class="block">
-      <div class="block color-theme-blue">
-        <h3 class="row">
-          <a  href="/add_scooter" class = " link external"> Add Scooter</a>
-        </h3>
-        <h3 class="row">
-            <a href="#" class = "external open-prompt1">Remove Scooter</a>
-        </h3>
-        <h3 class="row">
-            <a class = "link open-prompt2">Add Docking Station</a>
-        </h3>
-        <h3 class="row">
-            <a href="#" class = "external open-prompt3">Remove Docking Station</a>
-        </h3>
-        <h3><a href="/logout" class = "external">Logout</a></h3>
-        <p><a class="panel-close" href="#">Close me</a></p>
+    <div class="title"><h2><span style="font-family:pacifico">Ride-a-Bike</span></h2></div>
+    <div class="right">
+      <a href="/logout" class="external "><i class="icons f7-icons padding-right">square_arrow_right </i></a>
+  </div>
+      <div class="subnavbar">
+        <div class="subnavbar-inner">
+          <div class="segmented segmented-raised">
+            <a class="button tab-link tab-link-active" href="#tab1">Menu</a>
+            <a class="button tab-link" href="#tab2">Rides</a>
+          </div>
+        </div>
       </div>
     </div>
   </div>
-</div> -->
-        <div class="page-content">
-                <div class="navbar">
-                    <div class="navbar-bg"></div>
-                        <div class="navbar-inner">
-                            <div class="left">
-                                <div class= "block">
-                                    <img src="static/images/logo.png" height="50px" width = "50px" >
-                                </div>
-                            </div>
-                            <div class="title"><h3><span style="font-family:pacifico">Ride-a-Bike</span></h3></div>
-                            <div class="right">
-                                <!-- <p><a class="button panel-open" href="#" data-panel=".panel-right-2"><i class="icons f7-icons">ellipsis_vertical</i></a></p> -->
-                                <a href="/logout" class="external padding"><i class="icons f7-icons">square_arrow_right </i></a>
-                            </div>
-                        </div>
-                </div>
-                  <div class="float-right">
-                    <div class="menu">
-                     <div class="menu-inner">
-                      <div class="menu-item menu-item-dropdown">
-                          <div class="menu-item-content text-color-blue"><i class="icons f7-icons">ellipsis_vertical</i></div>
-                          <div class="menu-dropdown menu-dropdown-right">
-                            <div class="menu-dropdown-content">
-                                <div class="block">
-                                    <div class="block color-theme-blue">
-                                        <h3 class="row"><a  href="/add_scooter" class = " link external menu-dropdown-link menu-close "> Add Scooter</a></h3>
-                                        <h3 class = "row"><a href="#" class = "external open-prompt1 menu-dropdown-link menu-close">Remove Scooter</a></h3>
-                                        <h3 class="row"><a class = "link open-prompt2 menu-dropdown-link menu-close">Add Docking Station</a></h3>
-                                        <h3 class="row"><a href="#" class = "external open-prompt3 menu-dropdown-link menu-close">Remove Docking Station</a></h3>
-                                    </div>
-                                  </div>
-                            </div>
+  <div class="page-content hide-navbar-on-scroll">
+    <div class="tabs">
+      <div class="tab tab-active" id="tab1">
+           
+                    
+                    <!-- <block class = "text-color-black">
+          menu block
+        </block>
+        <div class="float-right">
+          <div class="menu">
+           <div class="menu-inner">
+            <div class="menu-item menu-item-dropdown">
+                <div class="menu-item-content text-color-blue"><i class="icons f7-icons">ellipsis_vertical</i></div>
+                <div class="menu-dropdown menu-dropdown-right">
+                  <div class="menu-dropdown-content">
+                      <div class="block">
+                          <div class="block color-theme-blue">
+                              <h3 class="row"><a  href="/add_scooter" class = " link external menu-dropdown-link menu-close "> Add Scooter</a></h3>
+                              <h3 class = "row"><a href="#" class = "external open-prompt1 menu-dropdown-link menu-close">Remove Scooter</a></h3>
+                              <h3 class="row"><a class = "link open-prompt2 menu-dropdown-link menu-close">Add Docking Station</a></h3>
+                              <h3 class="row"><a href="#" class = "external open-prompt3 menu-dropdown-link menu-close">Remove Docking Station</a></h3>
                           </div>
                         </div>
-                        </div>
-                      </div>
                   </div>
-                <!-- <div class = "block"> -->
-                      <h2 class = "text-color-blue text-align-left padding-left">Active Rides</h2>
-                <!-- </div> -->
-                    <div class="data-table card">
-                      {% if data %}
-                        <table>
-                          <thead>
-                            <tr>
-                              <th class="label-cell"><h3>Registration Number</h3></th>
-                              <th class="label-cell"><h3>From</h3></th>
-                              <th class="label-cell"><h3>Rider Name</h3></th>
-                              <th class="label-cell">Issue Time</th>
-                            </tr>
-                          </thead>
-                          <tbody>
-                            {% for i in data %}
-                            <tr>
-                              <td class="label-cell">{{ i["registration_number"] }}</td>
-                              <td class="label-cell">{{ i["from"] }}</td>
-                              <td class="label-cell">{{ i["name"] }}</td>
-                              <td class="label-cell">{{ i["start_time"] }}</td>
-                            </tr>
-                            {% endfor %}
-                          </tbody>
-                        </table>
-                        {% endif %}
-                      </div>
-                      <div class = "block">
-                          <h2 align="left" class = "text-color-blue">Logs</h2>
-                      </div>
-                      <div class="data-table card">
-                          {% if logs %}
-                            <table>
-                              <thead>
-                                <tr>
-                                  <th class="label-cell"><h3>Rider Name</h3></th>
-                                  <th class="label-cell"><h3>From</h3></th>
-                                  <th class="label-cell"><h3>Check Out</h3></th>
-                                  <th class="label-cell"><h3>To</h3></th>
-                                  <th class="label-cell"><h3>Check In</h3></th>
-                                  <th class="label-cell"><h3>Amount</h3></th>
-                                </tr>
-                              </thead>
-                              <tbody>
-                                {% for i in logs %}
-                                <tr>
-                                  <td class="label-cell">{{ i["name"] }}</td>
-                                  <td class="label-cell">{{ i["from"] }}</td>
-                                  <td class="label-cell">{{ i["start_time"] }}</td>
-                                  <td class="label-cell">{{ i["destination"] }}</td>
-                                  <td class="label-cell">{{ i["end_time"] }}</td>
-                                  <td class="label-cell">{{ i["amount"] }}</td>
-                                </tr>
-                                {% endfor %}
-                              </tbody>
-                            </table>
-                            {% endif %}
-                          </div>
-                        <!-- <div class="block color-theme-blue">
-                            <p class="row">
-                              <button class="col button button-outline"><a href="/add_scooter" class = "external"> Add Scooter</a></button>
-                            </p>
-                            <p class="row">
-                                <button class="col button button-outline open-prompt1"><a href="#" class = "external">Remove Scooter</a></button>
-                            </p>
-                            <p class="row">
-                                <button class="col button button-outline open-prompt2">Add Docking Station</button>
-                            </p>
-                            <p class="row">
-                                <button class="col button button-outline open-prompt3"><a href="#" class = "external">Remove Docking Station</a></button>
-                            </p>
-                        </div> -->
                 </div>
-        </div>
+              </div>
+              </div>
+            </div>
+        </div>  -->
+        <div class="block color-theme-blue">
+            <p class="row">
+              <button class="col button button-outline"><a href="/add_scooter" class = "external"> Add Scooter</a></button>
+            </p>
+            <p class="row">
+                <button class="col button button-outline open-prompt1"><a href="#" class = "external">Remove Scooter</a></button>
+            </p>
+            <p class="row">
+                <button class="col button button-outline open-prompt2">Add Docking Station</button>
+            </p>
+            <p class="row">
+                <button class="col button button-outline open-prompt3"><a href="#" class = "external">Remove Docking Station</a></button>
+            </p>
+        </div> 
+      </div>
+      <div class="tab" id="tab2">
+          <div class = "block">
+              <h2 align="left" class = "text-color-blue padding-left">Active Rides</h2>
+          </div>
+              <div class="data-table card">
+                {% if data %}
+                  <table>
+                    <thead>
+                      <tr>
+                        <th class="label-cell"><h3 class = "text-align-center">Registration Number</h3></th>
+                        <th class="label-cell"><h3 class = "text-align-center">From</h3></th>
+                        <th class="label-cell"><h3 class = "text-align-center">Rider Name</h3></th>
+                        <th class="label-cell"><h3 class = "text-align-center">Issue Time</h3></th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {% for i in data %}
+                      <tr>
+                        <td class="label-cell text-align-center">{{ i["registration_number"] }}</td>
+                        <td class="label-cell text-align-center">{{ i["from"] }}</td>
+                        <td class="label-cell text-align-center">{{ i["name"] }}</td>
+                        <td class="label-cell text-align-center">{{ i["start_time"] }}</td>
+                      </tr>
+                      {% endfor %}
+                    </tbody>
+                  </table>
+                  {% endif %}
+                </div>
+                <div class = "block">
+                    <h2 align="left" class = "text-color-blue padding-left">Logs</h2>
+                </div>
+                <div class="data-table card">
+                    {% if logs %}
+                      <table>
+                        <thead>
+                          <tr>
+                            <th class="label-cell"><h3 class = "text-align-center">Rider Name</h3></th>
+                            <th class="label-cell"><h3 class = "text-align-center">From</h3></th>
+                            <th class="label-cell"><h3 class = "text-align-center">Check Out</h3></th>
+                            <th class="label-cell"><h3 class = "text-align-center">To</h3></th>
+                            <th class="label-cell"><h3 class = "text-align-center">Check In</h3></th>
+                            <th class="label-cell"><h3 class = "text-align-center">Amount</h3></th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          {% for i in logs %}
+                          <tr>
+                            <td class="label-cell text-align-center">{{ i["name"] }}</td>
+                            <td class="label-cell text-align-center">{{ i["from"] }}</td>
+                            <td class="label-cell text-align-center">{{ i["start_time"] }}</td>
+                            <td class="label-cell text-align-center">{{ i["destination"] }}</td>
+                            <td class="label-cell text-align-center">{{ i["end_time"] }}</td>
+                            <td class="label-cell text-align-center">{{ i["amount"] }}</td>
+                          </tr>
+                          {% endfor %}
+                        </tbody>
+                      </table>
+                      {% endif %}
+                    </div> 
+      </div>
+    </div>
+  </div>
 </div>
+</div>
+
 {% endblock %}
 
 {% block scripts %}
