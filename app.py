@@ -155,7 +155,7 @@ def start_ride():
             if request.method == 'POST': 
                 username = session['username']
                 scooter_data = db.scooter.find({"docking_station":request.form['station_name']})
-                db.details.update({"name":session['username']},{"$set":{"from":request.form['station_name'],"status":"riding"}})
+                db.details.update({"name":session['username']},{"$set":{"from":request.form['station_name']}})
                 x = db.details.find({"name":session['username']})
                 amount = x[0]["balance"]
                 return render_template("start_ride.html",username = username,scooter_data = scooter_data,amount = amount)
@@ -188,7 +188,7 @@ def end_ride():
                 start_time = a.strftime("%c")
                 data = db.scooter.find({"registration_number":request.form['registration_number']})
                 station  = data[0]["docking_station"]
-                db.details.update({"name":session['username']},{"$set":{"registration_number":request.form['registration_number'],"start_time":start_time}})
+                db.details.update({"name":session['username']},{"$set":{"registration_number":request.form['registration_number'],"start_time":start_time,"status":"riding"}})
                 db.scooter.update({"registration_number":request.form['registration_number']},{"$set":{"rider_name":session['username'],"ignition_status":"on","docking_station":"-"}})
                 details = db.docking_station.find({"station_name":station})
                 num = details[0]["no_of_scooters"]
@@ -293,7 +293,7 @@ def bill():
             pdf.line(15, 165, 195, 165)
             pdf.output("ride-a-bike_bill.pdf")
 
-            db.details.update({"name":session['username']},{"$set":{"status":"-"}})
+            db.details.update({session['username']},{"$set":{"status":"-"}})
             return render_template("bill.html",time = end_time,data = data,minutes = minutes,amount = amount,username = session['username'],balance = balance)
           else:
               return render_template("bill.html")
