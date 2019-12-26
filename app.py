@@ -486,6 +486,22 @@ def delete_account(methods = ['POST','GET']):
     else:
         return render_template("login_error.html")
 
+@app.route('/messages',methods = ['POST','GET'])
+def messages():
+    if request.method == 'POST':
+        name = request.form["name"]
+        email = request.form["email"]
+        message = request.form["message"]
+        if name != "" and email != "" and message != "":
+            db.messages.insert({"name":name,"email":email,"message":message})
+        return redirect('/')
+    else:
+        if 'username' in session and session['username'] == manager_name:
+            x = db.messages.find({})
+            return render_template("view_messages.html",messages = x)
+        else:
+            return render_template("login_error.html")
+
 @app.route('/logout')
 def logout():
     session.pop('username',None)
