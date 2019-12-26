@@ -37,6 +37,13 @@
               </div>
             </div>
             <div class="page-content">
+              {% if msg %}
+              <script src="{{ url_for('static', filename='js/framework7.bundle.min.js') }}"></script>
+              <script src="{{ url_for('static', filename='js/f7_setup.js') }}"></script>
+              <script type = "text/javascript">
+                app.dialog.alert("{{ msg }}");
+               </script>
+              {% endif %}
                 <div class = "block">
                     <h1 class = "text-align-center text-color-blue">Details</h1>
                 </div>
@@ -82,7 +89,7 @@
                         <a href = "/account_settings" class = "external"><button class="col button button-raised button-fill"><span style = "color:black;"><i class="icons f7-icons">pencil</i>&NonBreakingSpace;Update Details</span></button></a>
                     </div>
                     <div class = "block">
-                            <button class="col button button-fill color-red"><i class="icons f7-icons">trash</i>&NonBreakingSpace;Delete My Account</button>
+                            <a href = "/delete_account" class = "external"><button class="col button button-fill color-red"><i class="icons f7-icons">trash</i>&NonBreakingSpace;Delete My Account</button></a>
                     </div>
             </div>
           </div>

@@ -47,7 +47,7 @@ def signup():
         password = request.form['password']
         pass_256 = hashlib.sha256(password.encode())
         pass_encrypt = pass_256.hexdigest()
-        cred = {"name":request.form['name'],"email":request.form['email'],"phone_number":request.form['phone_number'],"gender":request.form['gender'],"blood_group":request.form['blood_group'],"dob":request.form['dob'],"dl_number":request.form['dl_number'],"dl_valid_till":request.form['dl_valid_till'],"password":pass_encrypt,"balance":0}
+        cred = {"name":request.form['name'],"email":request.form['email'],"phone_number":request.form['phone_number'],"gender":request.form['gender'],"blood_group":request.form['blood_group'],"dob":request.form['dob'],"dl_number":request.form['dl_number'],"dl_valid_till":request.form['dl_valid_till'],"password":pass_encrypt,"balance":0,"status":"-"}
         db.details.insert(cred) 
         session['username'] = request.form['name']
         return redirect('/home')
@@ -174,9 +174,8 @@ def end_ride():
         if 'username' in session and session['username'] != manager_name:
             if request.method == 'POST':
                 x = db.details.find({"name":session['username']})
-                if x[0]["status"] == "-" :
-                    print("here1")
-                    return redirect('/home')
+                # if x[0]["status"] == "-" :
+                #     return redirect('/home')
                 bal = db.details.find({"name":session['username']})
                 balance = bal[0]["balance"]
                 if balance < 100:
@@ -198,7 +197,6 @@ def end_ride():
             else:
                 x = db.details.find({"name":session['username']})
                 if x[0]["status"] == "-" :
-                    print("here2")
                     return redirect('/home')
                 username = session['username']
                 docking_station_data = db.docking_station.find({})
@@ -293,7 +291,7 @@ def bill():
             pdf.line(15, 165, 195, 165)
             pdf.output("ride-a-bike_bill.pdf")
 
-            db.details.update({session['username']},{"$set":{"status":"-"}})
+            db.details.update({"name":session['username']},{"$set":{"status":"-"}})
             return render_template("bill.html",time = end_time,data = data,minutes = minutes,amount = amount,username = session['username'],balance = balance)
           else:
               return render_template("bill.html")
@@ -462,6 +460,29 @@ def my_account():
         x = db.details.find({"name":username})
         amount = x[0]["balance"]
         return render_template("my_account.html",username = username,amount = amount,details = x)
+    else:
+        return render_template("login_error.html")
+
+@app.route('/delete_account')
+def delete_account(methods = ['POST','GET']):
+    if 'username' in session and session['username'] != manager_name:
+        if request.method == 'POST':
+            return redirect('/my_account')
+        else:
+            x = db.details.find({"name":session['username']})
+            amount = int(x[0]["balance"])
+            if amount < 0:
+                msg = "Payment is due"
+                return render_template("my_account.html",msg = msg,username = session['username'],amount = x[0]["balance"],details = x)
+            else:
+                try:
+                    db.details.delete_one({"name":session['username']})
+                    db.logs.delete_many({"name":session['username']})
+                    db.payments.delete_many({"name":session['username']})
+                    session.pop('username',None)
+                    return redirect('/')
+                except:
+                    return redirect('/')
     else:
         return render_template("login_error.html")
 
