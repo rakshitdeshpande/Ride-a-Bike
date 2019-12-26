@@ -1,5 +1,5 @@
 {% extends 'base.html' %}
-{% block title %}Rides{% endblock %}
+{% block title %}My Account{% endblock %}
 
 {% block body_content %}
         <div class="view view-main view-init">
@@ -9,7 +9,7 @@
                         <h3>Hello , {{ username }} </h3>
                     </div>
                   <div class="block">
-                      <p><i class="icons f7-icons">house</i>&NonBreakingSpace;<a href="/home" class = "external">Home</a></p>
+                      <p><i class="icons f7-icons">house </i>&NonBreakingSpace;<a href="/home" class = "external">Home</a></p>
                       <p><i class="icons f7-icons">person_crop_circle </i>&NonBreakingSpace;<a href="/my_account" class = "external">My Profile</a></p>
                       <p> <i class="fa fa-bicycle" style="font-size:28px;"></i>&NonBreakingSpace;<a href="/rides" class = "external">Rides</a></p>
                       <p><i class="icons f7-icons">creditcard_fill</i>&NonBreakingSpace;<a href="" class = "open-prompt2">Top Up</a></p>
@@ -37,29 +37,53 @@
               </div>
             </div>
             <div class="page-content">
-                <!-- <div class="block text-align-center">
-                    <p align="center">
-                      <img src="static/images/logo.png" >
-                    </p>
-                </div> -->
-                {% for i in data %}
-                    <div class="card card-outline">
-                        <div class="card-content card-content-padding">
-                            <p><i class="icons f7-icons">arrow_right</i> &NonBreakingSpace; {{ i["from"] }}</p>
-                            <p>Check out : &NonBreakingSpace;{{ i["start_time"] }}</p>
-                            <p><i class="icons f7-icons">arrow_left</i> &NonBreakingSpace; {{ i["destination"] }}</p>
-                            <p>Check in : &NonBreakingSpace;{{ i["end_time"] }}</p>
-                        </div>
-                        <div class="card-footer">
-                            <div class = "left">
-                                {{i["duration"] }}.Mins
-                            </div>
-                            <div class = "right">
-                                &#x20B9; {{i["amount"] }}
-                            </div>
-                        </div>
+                <div class = "block">
+                    <h1 class = "text-align-center text-color-blue">Details</h1>
+                </div>
+                <div class="data-table card">
+                    {% if details %}
+                      <table>
+                        <tbody>
+                          {% for i in details %}
+                          <tr>
+                            <th class="label-cell text-align-center">Name</th>
+                            <td class="label-cell text-align-center">{{ i["name"] }}</td>
+                          </tr>
+                          <tr>
+                                <th class="label-cell text-align-center">Email ID</th>
+                                <td class="label-cell text-align-center">{{ i["email"] }}</td>
+                          </tr>
+                          <tr>
+                                <th class="label-cell text-align-center">Phone Number</th>
+                                <td class="label-cell text-align-center">{{ i["phone_number"] }}</td>
+                          </tr>
+                          <tr>
+                                <th class="label-cell text-align-center">Gender</th>
+                                <td class="label-cell text-align-center">{{ i["gender"] }}</td>
+                          </tr>
+                          <tr>
+                                <th class="label-cell text-align-center">Date of Birth</th>
+                                <td class="label-cell text-align-center">{{ i["dob"] }}</td>
+                          </tr>
+                          <tr>
+                                <th class="label-cell text-align-center">DL Number</th>
+                                <td class="label-cell text-align-center">{{ i["dl_number"] }}</td>
+                          </tr>
+                          <tr>
+                                <th class="label-cell text-align-center">DL Valid Till</th>
+                                <td class="label-cell text-align-center">{{ i["dl_valid_till"] }}</td>
+                          </tr>
+                          {% endfor %}
+                        </tbody>
+                      </table>
+                      {% endif %}
+                    </div> 
+                    <div class = "block color-theme-yellow">
+                        <a href = "/account_settings" class = "external"><button class="col button button-raised button-fill"><span style = "color:black;"><i class="icons f7-icons">pencil</i>&NonBreakingSpace;Update Details</span></button></a>
                     </div>
-                {% endfor %}
+                    <div class = "block">
+                            <button class="col button button-fill color-red"><i class="icons f7-icons">trash</i>&NonBreakingSpace;Delete My Account</button>
+                    </div>
             </div>
           </div>
         </div>

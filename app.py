@@ -454,6 +454,17 @@ def download_bill():
         return send_file("ride-a-bike_bill.pdf", as_attachment=True)
     else:
         return render_template("login_error.html")
+
+@app.route('/my_account')
+def my_account():
+    if 'username' in session and session['username'] != manager_name:
+        username = session['username']
+        x = db.details.find({"name":username})
+        amount = x[0]["balance"]
+        return render_template("my_account.html",username = username,amount = amount,details = x)
+    else:
+        return render_template("login_error.html")
+
 @app.route('/logout')
 def logout():
     session.pop('username',None)
