@@ -89,7 +89,8 @@ def home():
         docking_station_details = db.docking_station.find({})
         amt = db.details.find({"name":session['username']})
         amount = amt[0]["balance"]
-        return render_template("home.html",username = username,docking_station_details=docking_station_details,amount = amount)
+        x = db.fare.find({})
+        return render_template("home.html",username = username,docking_station_details=docking_station_details,amount = amount,base_price = x[0]["base_price"],per_min = x[0]["per_min"],min_price = x[0]["min_price"])
       else:
           
           return redirect('/start_ride')
@@ -158,11 +159,13 @@ def start_ride():
                 db.details.update({"name":session['username']},{"$set":{"from":request.form['station_name']}})
                 x = db.details.find({"name":session['username']})
                 amount = x[0]["balance"]
-                return render_template("start_ride.html",username = username,scooter_data = scooter_data,amount = amount)
+                y = db.fare.find({})
+                return render_template("start_ride.html",username = username,scooter_data = scooter_data,amount = amount,base_price = y[0]["base_price"],per_min = y[0]["per_min"],min_price = y[0]["min_price"])
             else:
                 x = db.details.find({"name":session['username']})
                 amount = x[0]["balance"] 
-                return render_template("start_ride.html",amount = amount,username = session['username'])
+                y = db.fare.find({})
+                return render_template("start_ride.html",amount = amount,username = session['username'],base_price = y[0]["base_price"],per_min = y[0]["per_min"],min_price = y[0]["min_price"])
         else:
             return render_template("login_error.html")
     except:
@@ -223,6 +226,13 @@ def bill():
             data = db.details.find({"name":session['username']})
             start_time = data[0]["start_time"]
             a = start_time.split(" ")
+            x = db.fare.find({})
+            base_price =  x[0]["base_price"]
+            per_min = x[0]["per_min"]
+            min_price = x[0]["min_price"]
+            Base_price = int(base_price)
+            Per_min = int(per_min)
+            Min_price = int(min_price)
             global time
             global before_hour
             global before_min
@@ -292,7 +302,7 @@ def bill():
             pdf.output("ride-a-bike_bill.pdf")
 
             db.details.update({"name":session['username']},{"$set":{"status":"-"}})
-            return render_template("bill.html",time = end_time,data = data,minutes = minutes,amount = amount,username = session['username'],balance = balance)
+            return render_template("bill.html",time = end_time,data = data,minutes = minutes,amount = amount,username = session['username'],balance = balance,base_price = x[0]["base_price"],per_min = x[0]["per_min"],min_price = x[0]["min_price"])
           else:
               return render_template("bill.html")
         else:
@@ -344,7 +354,8 @@ def rides():
             data = db.logs.find({"name":session['username']}).sort([("start_time",pymongo.DESCENDING)])
             x =  db.details.find({"name":session['username']})
             amount = x[0]["balance"]
-            return render_template("rides.html", data = data ,username = session['username'],amount = amount)
+            y = db.fare.find({})
+            return render_template("rides.html", data = data ,username = session['username'],amount = amount,base_price = y[0]["base_price"],per_min = y[0]["per_min"],min_price = y[0]["min_price"])
         else:
             return render_template("login_error.html")
     except:
@@ -368,7 +379,8 @@ def accout_settings():
                     db.details.update({"name":session['username']},{"$set":{"password":pass_encrypt}})
                 return redirect('/home')
             else:
-                return render_template("update.html", username = session['username'])
+                x = db.fare.find({})
+                return render_template("update.html", username = session['username'],base_price = x[0]["base_price"],per_min = x[0]["per_min"],min_price = x[0]["min_price"])
         else:
             return render_template("login_error.html")
     except:
@@ -442,7 +454,8 @@ def payments():
             data = db.payments.find({"name":session['username']}).sort([("time",pymongo.DESCENDING)])
             a = db.details.find({"name":session['username']})
             amount = a[0]["balance"]
-            return render_template("payments.html",data = data,username = session['username'],amount = amount) 
+            x = db.fare.find({})
+            return render_template("payments.html",data = data,username = session['username'],amount = amount,base_price = x[0]["base_price"],per_min = x[0]["per_min"],min_price = x[0]["min_price"]) 
     except:
         return render_template("login_error.html")
 
@@ -459,7 +472,8 @@ def my_account():
         username = session['username']
         x = db.details.find({"name":username})
         amount = x[0]["balance"]
-        return render_template("my_account.html",username = username,amount = amount,details = x)
+        y = db.fare.find({})
+        return render_template("my_account.html",username = username,amount = amount,details = x,base_price = y[0]["base_price"],per_min = y[0]["per_min"],min_price = y[0]["min_price"])
     else:
         return render_template("login_error.html")
 
@@ -473,7 +487,8 @@ def delete_account(methods = ['POST','GET']):
             amount = int(x[0]["balance"])
             if amount < 0:
                 msg = "Payment is due"
-                return render_template("my_account.html",msg = msg,username = session['username'],amount = x[0]["balance"],details = x)
+                y = db.fare.find({})
+                return render_template("my_account.html",msg = msg,username = session['username'],amount = x[0]["balance"],details = x,base_price = y[0]["base_price"],per_min = y[0]["per_min"],min_price = y[0]["min_price"])
             else:
                 try:
                     db.details.delete_one({"name":session['username']})
@@ -501,6 +516,22 @@ def messages():
             return render_template("view_messages.html",messages = x)
         else:
             return render_template("login_error.html")
+
+@app.route('/set_fare' , methods = ['POST','GET'])
+def set_fare():
+    if 'username' in session and session['username'] == manager_name:
+            if request.method == 'POST':
+                base_price = request.form['base_price']
+                per_min = request.form['per_min']
+                min_price = request.form['min_price']
+                db.fare.delete_many({})
+                db.fare.insert({"base_price":base_price,"per_min":per_min,"min_price":min_price})
+                # db.fare.update({"_id":*},{"$set":{"base_price":base_price,"per_min":per_min,"min_price":min_price}})
+                return redirect('/manager')
+            else:
+                return render_template("set_fare.html")
+    else:
+        return render_template("login_error.html")
 
 @app.route('/logout')
 def logout():
