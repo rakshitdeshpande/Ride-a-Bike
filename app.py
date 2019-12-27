@@ -181,7 +181,9 @@ def end_ride():
                 #     return redirect('/home')
                 bal = db.details.find({"name":session['username']})
                 balance = bal[0]["balance"]
-                if balance < 100:
+                x = db.fare.find({})
+                min_price = int(x[0]["min_price"])
+                if balance < min_price:
                     error = "No sufficcient balance, please Top Up your wallet"
                     return render_template("start_ride.html",balance = balance,username = session['username'],error = error)
                 username = session['username']
@@ -227,12 +229,9 @@ def bill():
             start_time = data[0]["start_time"]
             a = start_time.split(" ")
             x = db.fare.find({})
-            base_price =  x[0]["base_price"]
-            per_min = x[0]["per_min"]
-            min_price = x[0]["min_price"]
-            Base_price = int(base_price)
-            Per_min = int(per_min)
-            Min_price = int(min_price)
+            base_price =  int(x[0]["base_price"])
+            per_min = int(x[0]["per_min"])
+            min_price = int(x[0]["min_price"])
             global time
             global before_hour
             global before_min
@@ -266,7 +265,7 @@ def bill():
             #     amount = quo*50
             # else:
             #     amount = (quo + 1 )*50
-            amount = 20 + (minutes * 3)
+            amount = base_price + (minutes * per_min)
             balance = data[0]["balance"]
             balance = balance - amount
             db.details.update({"name":session['username']},{"$set":{"balance":balance}})
@@ -284,7 +283,7 @@ def bill():
             pdf.line(10, 25, 200, 25)
             pdf.image('static/images/logo.png', x=85, y=30, w=50)
             pdf.set_font("Arial",'B', size = 20)
-            pdf.cell(200,120,txt = "Name : "+session['username'] , ln = 1, align="L")
+            pdf.cell(200,120,txt = session['username'] , ln = 1, align="L")
             pdf.set_font("Arial", size = 18)
             pdf.set_line_width(1)
             pdf.set_draw_color(0, 0, 0)
@@ -292,8 +291,8 @@ def bill():
             start_station = data[0]["from"]
             pdf.cell(200, -75, txt="From :  "+start_station+"    "+start_time , ln=1, align="L")
             pdf.cell(200,100, txt="To :   "+request.form['destination']+"    "+end_time , ln=1, align="L")
-            pdf.cell(200,-75, txt = "Minimum Fare : 20" ,ln = 1, align="L")
-            pdf.cell(200,100, txt = "Time Fare ("+str(minutes)+" mins) : "+str((minutes * 3)) ,ln = 1, align="L")
+            pdf.cell(200,-75, txt = "Minimum Fare : "+str(base_price) ,ln = 1, align="L")
+            pdf.cell(200,100, txt = "Time Fare ("+str(minutes)+" mins) : "+str((minutes * per_min)) ,ln = 1, align="L")
             pdf.set_font("Arial",'B', size = 20)
             pdf.cell(200,-75, txt = "Total : "+str(amount) ,ln = 1, align="L")
             pdf.set_line_width(1)
