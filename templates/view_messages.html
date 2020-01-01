@@ -58,34 +58,6 @@
 
 var $$ = Dom7;
 
-// Alert
-$$('.open-alert').on('click', function () {
-  app.dialog.alert('Ride Fare:<br>Base price : &#x20B9;20<br>per minute : &#x20B9;3<br>Minimum Balance : &#x20B9;100');
-});
-
-//Top Up
-$$('.open-prompt2').on('click', function () {
-    app.dialog.prompt('Enter Amount to be added', function (Amount) {
-      app.dialog.confirm('Are you sure that Amount is ' + Amount + '?', function () {
-        var xhttp = new XMLHttpRequest();
-        xhttp.onreadystatechange = function() {
-          if (this.readyState == 4 && this.status == 200) {
-            Amount = this.responseText;
-          }
-        };
-        xhttp.open("POST", "/top_up", true);
-        xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-        xhttp.send("Amount="+Amount);
-        setTimeout(wait,1000);
-      });
-    });
-  });
-
-function wait()
-{
-  window.location.href = '/home';
-}
-
 // Dom Events
 $$('.panel-left').on('panel:open', function () {
   console.log('Panel left: open');
@@ -113,7 +85,5 @@ app.on('panelClosed', function (panel) {
 app.on('panelResize', function (panel, newPanelWidth) {
   console.log('Panel resized to ' + newPanelWidth + 'px');
 });
-
-
 </script>
 {% endblock %}
